@@ -10,128 +10,140 @@
             background-color: #f5f5f5;
             padding: 20px;
             display: flex;
-            flex-wrap: wrap;
+            justify-content: center;
         }
+
+        #cardContainer {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+            box-sizing: border-box;
+        }
+
         .card {
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin: 10px;
-            padding: 20px;
-            width: calc(33.333% - 40px);
-            box-sizing: border-box;
-            transition: background-color 0.3s;
+            overflow: hidden;
+            transition: transform 0.3s, background-color 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
+
         .card img {
-            max-width: 100%;
-            border-radius: 8px;
+            width: 50%;
+            height: auto;
+            border-bottom: 1px solid #ddd;
         }
+
+        .card-content {
+            padding: 15px;
+        }
+
+        .card-content p {
+            margin: 10px 0;
+        }
+
         .card button {
-            margin-top: 10px;
+            margin: 10px;
             padding: 10px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.3s;
+            color: white;
+            width: calc(100% - 20px);
+            align-self: center;
         }
+
         .pending { background-color: #ffc107; }
         .frame-ready { background-color: #17a2b8; }
-        .confirm { background-color: #28a745; color: white; }
-        .confirm:disabled { background-color: #ccc; }
+        .confirm { background-color: #28a745; }
+        .confirm:disabled { background-color: #ccc; cursor: not-allowed; }
+
+        .card:hover {
+            transform: scale(1.02);
+        }
     </style>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDq1HOD-Aj9enPFMXnTecX-9p3HVe7jAJM",
+            authDomain: "furniture-data-6dfed.firebaseapp.com",
+            projectId: "furniture-data-6dfed",
+            storageBucket: "furniture-data-6dfed.appspot.com",
+            messagingSenderId: "362514009921",
+            appId: "1:362514009921:web:3671e5179954193eb49bc0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const cardContainer = document.getElementById("cardContainer");
+
+        async function loadCards() {
+            const querySnapshot = await getDocs(collection(db, "cards"));
+            querySnapshot.forEach((doc) => {
+                createCard(doc.data());
+            });
+        }
+
+        function createCard(data) {
+            const card = document.createElement("div");
+            card.className = "card";
+
+            data.photoURLs.forEach(photo => {
+                let img = document.createElement("img");
+                img.src = photo;
+                card.appendChild(img);
+            });
+
+            const content = document.createElement('div');
+            content.className = 'card-content';
+            content.innerHTML = `
+                <p><strong>Name:</strong> ${data.name}</p>
+                <p><strong>Size:</strong> ${data.size}</p>
+                <p><strong>Due Date:</strong> ${data.dueDate}</p>
+                <p><strong>Urgent:</strong> ${data.urgent}</p>
+            `;
+
+            const btnPending = document.createElement('button');
+            btnPending.className = 'pending';
+            btnPending.textContent = 'Pending';
+
+            const btnFrameReady = document.createElement('button');
+            btnFrameReady.className = 'frame-ready';
+            btnFrameReady.textContent = 'Frame Ready';
+
+            const btnConfirm = document.createElement('button');
+            btnConfirm.className = 'confirm';
+            btnConfirm.textContent = 'Confirm';
+            btnConfirm.disabled = true;
+
+            btnFrameReady.addEventListener('click', () => {
+                btnConfirm.disabled = false;
+            });
+
+            btnConfirm.addEventListener('click', () => {
+                card.style.backgroundColor = '#d4edda';
+            });
+
+            card.appendChild(content);
+            card.appendChild(btnPending);
+            card.appendChild(btnFrameReady);
+            card.appendChild(btnConfirm);
+
+            cardContainer.appendChild(card);
+        }
+
+        loadCards();
+    </script>
 </head>
 <body>
-
-<div id="cardContainer">
-    <!-- Cards will be dynamically generated here -->
-</div>
-
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
-
-<script>
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDq1HOD-Aj9enPFMXnTecX-9p3HVe7jAJM",
-  authDomain: "furniture-data-6dfed.firebaseapp.com",
-  projectId: "furniture-data-6dfed",
-  storageBucket: "furniture-data-6dfed.firebasestorage.app",
-  messagingSenderId: "362514009921",
-  appId: "1:362514009921:web:3671e5179954193eb49bc0",
-  measurementId: "G-9VZ348MYPX"
-};
-
-    // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.getFirestore(app);
-
-    const cardContainer = document.getElementById('cardContainer');
-
-    function createCard(data) {
-        const card = document.createElement('div');
-        card.className = 'card';
-
-        if (data.photoURL) {
-            const img = document.createElement('img');
-            img.src = data.photoURL;
-            card.appendChild(img);
-        }
-
-        const nameText = document.createElement('p');
-        nameText.textContent = "Name: " + data.name;
-        card.appendChild(nameText);
-
-        const sizeText = document.createElement('p');
-        sizeText.textContent = "Size: " + data.size;
-        card.appendChild(sizeText);
-
-        const dueDateText = document.createElement('p');
-        dueDateText.textContent = "Due Date: " + data.dueDate;
-        card.appendChild(dueDateText);
-
-        if (data.urgent) {
-            const urgentText = document.createElement('p');
-            urgentText.textContent = "Urgent: " + data.urgent;
-            card.appendChild(urgentText);
-        }
-
-        const pendingButton = document.createElement('button');
-        pendingButton.textContent = 'Pending';
-        pendingButton.className = 'pending';
-        card.appendChild(pendingButton);
-
-        const frameReadyButton = document.createElement('button');
-        frameReadyButton.textContent = 'Frame Ready';
-        frameReadyButton.className = 'frame-ready';
-        card.appendChild(frameReadyButton);
-
-        const confirmButton = document.createElement('button');
-        confirmButton.textContent = 'Confirm';
-        confirmButton.className = 'confirm';
-        confirmButton.disabled = true;
-        card.appendChild(confirmButton);
-
-        frameReadyButton.onclick = function() {
-            confirmButton.disabled = false;
-        };
-
-        confirmButton.onclick = function() {
-            card.style.backgroundColor = '#d4edda'; // Light green
-        };
-
-        cardContainer.appendChild(card);
-    }
-
-    // Fetch data from Firestore and create cards
-    firebase.getDocs(firebase.collection(db, 'cards')).then(snapshot => {
-        snapshot.forEach(doc => {
-            createCard(doc.data());
-        });
-    }).catch(error => {
-        console.error("Error fetching data: ", error);
-    });
-</script>
-
+    <div id="cardContainer"></div>
 </body>
 </html>
