@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pioneer Login</title>
+  <style>
+    * { padding: 0; margin: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #f0f4f8; }
+    .container { width: 350px; padding: 30px; border-radius: 10px; border: 2px solid red; background: #fff; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); }
+    h2 { text-align: center; color: #2c4766; margin-bottom: 20px; }
+    .input-box { margin: 20px 0; }
+    .input-box label { font-size: 14px; display: block; margin-bottom: 8px; }
+    .input-box input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; }
+    .btn { width: 100%; padding: 10px; background: #0ef; border: none; border-radius: 8px; font-weight: 600; font-size: 16px; cursor: pointer; transition: background 0.3s ease; }
+    .btn:hover { background: #009cda; }
+
+    /* Loading Animation */
+    .loading {
+      display: none; /* Default hidden */
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .loading img {
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Fill Work Details</h2>
+    <form id="workForm">
+      <div class="input-box">
+        <label for="name">Details</label>
+        <input type="text" id="name" required>
+      </div>
+      <div class="input-box">
+        <label for="size">Bill No.</label>
+        <input type="text" id="size" required>
+      </div>
+      <div class="input-box">
+        <label for="dueDate">Due Date</label>
+        <input type="date" id="dueDate" required>
+      </div>
+      <div class="input-box">
+        <input type="checkbox" id="urgent">
+        <label for="urgent">Urgent</label>
+      </div>
+      <div class="input-box">
+        <label for="image">Upload Image</label>
+        <input type="file" id="image" accept="image/*">
+      </div>
+      <button type="submit" class="btn">Submit</button>
+    </form>
+
+    <!-- Loading Animation -->
+    <div class="loading" id="loading">
+      <img src="https://i.gifer.com/ZZ5H.gif" alt="Loading...">
+      <p>Submitting...</p>
+    </div>
+  </div>
+
+  <!-- Include Parse SDK -->
+  <script src="https://npmcdn.com/parse/dist/parse.min.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const form = document.getElementById("workForm");
+      const loading = document.getElementById("loading");
+
+      // Initialize Parse (Back4App)
+      Parse.initialize("qy8z2SCM8r09qpMunKUCIx4I4OsGMII53b9buurv", "7qOd9JbeR2M6zXoW9qM5gDMj1o5Heam4Ul2fEp2T");
+      Parse.serverURL = "https://parseapi.back4app.com/";
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        loading.style.display = "block"; // Show loading animation
+
+        // Collect form data
+        const name = document.getElementById("name").value;
+        const size = document.getElementById("size").value;
+        const dueDate = document.getElementById("dueDate").value;
+        const urgent = document.getElementById("urgent").checked;
+        const imageFile = document.getElementById("image").files[0];
+
+        let imageUrl = "";
+
+        if (imageFile) {
+          try {
+            console.log("Uploading image:", imageFile.name);
+            const parseFile = new Parse.File(imageFile.name, imageFile);
+            await parseFile.save();
+            imageUrl = parseFile.url();
+            console.log("Image uploaded successfully:", imageUrl);
+          } catch (error) {
+            console.error("Error uploading image:", error);
+            alert("Error uploading image: " + (error.message || JSON.stringify(error)));
+            loading.style.display = "none"; // Hide loading if error occurs
+            return;
+          }
+        }
+
+        // Save data to the database
+        const WorkDetails = Parse.Object.extend("WorkDetails");
+        const workDetails = new WorkDetails();
+
+        workDetails.set("name", name);
+        workDetails.set("size", size);
+        workDetails.set("dueDate", dueDate);
+        workDetails.set("urgent", urgent);
+        workDetails.set("image", imageUrl);
+
+        try {
+          await workDetails.save();
+          alert("Work details submitted successfully!");
+          form.reset(); // Reset form after successful submission
+        } catch (error) {
+          console.error("Error saving work details:", error);
+          alert("Failed to submit work details: " + (error.message || JSON.stringify(error)));
+        } finally {
+          loading.style.display = "none"; // Hide loading animation
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
