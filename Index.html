@@ -1,48 +1,47 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
- <script src="https://kit.fontawesome.com/bb9a045d57.js" crossorigin="anonymous"></script>
   <title>Submitted Data</title>
+  
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/bb9a045d57.js" crossorigin="anonymous"></script>
 
-      <style>
-    * { padding: 0; 
-    margin: 0; 
-    box-sizing: border-box; 
-    font-family: Arial, sans-serif; 
-    }
+  <style>
+    * { 
+    padding: 0;
+     margin: 0; 
+     box-sizing: border-box; 
+     font-family: Arial, sans-serif;
+      }
     
     body {
-      background: #f0f4f8; 
-      padding: 20px;
-    }
+     background: #f0f4f8;
+      padding: 20px; 
+      }
     
     .container { 
       max-width: 600px;
       margin: auto; 
-      background: #fff; 
-      padding: 20px; 
+      background: gray; 
+      padding: 2px; 
       border-radius: 10px; 
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
-    h2 { 
-      text-align: center; 
-      margin-bottom: 20px; 
-      color: #2c4766; 
-    }
+
+    h2 { text-align: center; margin-bottom: 20px; color: #2c4766; }
+
     .card {
       background: #f9f9f9; 
       padding: 20px; 
       border-radius: 8px; 
       margin-bottom: 20px; 
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
-      position: relative; 
       border:1px solid black;
-      
+      position: relative;
     }
+
     .card img { 
       width: 100%; 
       max-height: 150px; 
@@ -51,10 +50,12 @@
       margin-bottom: 10px; 
       cursor: pointer; 
     }
+
     .buttons { 
-      display: flex; 
-      gap: 10px; 
-    }
+    display: flex;
+     gap: 10px; 
+     }
+    
     .btn { 
       flex: 1; 
       padding: 10px; 
@@ -64,19 +65,11 @@
       cursor: pointer; 
       transition: background 0.3s ease; 
     }
-    .pending { 
-      background: orange; 
-      color: white; 
-    }
-  
-    .frame-ready { 
-      background: skyblue; 
-      color: white; 
-    }
-    .confirm { 
-      background: green; 
-      color: white; 
-    }
+
+    .pending { background: orange; color: white; }
+    .frame-ready { background: skyblue; color: white; }
+    .confirm { background: green; color: white; }
+
     .status { 
       position: absolute; 
       top: 0; 
@@ -86,151 +79,64 @@
       color: black; 
       font-weight: bold; 
     }
+
+    .sofa-ready { background-color: lightgreen; }
+
+    /* Fullscreen Image */
     .full-img-container { 
       display: none; 
       position: fixed; 
-      top: 0; 
-      left: 0; 
-      width: 100%; 
-      height: 100%; 
+      top: 0; left: 0; 
+      width: 100%; height: 100%; 
       background: rgba(0, 0, 0, 0.8); 
       justify-content: center; 
       align-items: center; 
     }
-    .full-img-container img { 
-      max-width: 90%; 
-      max-height: 90%; 
-      border-radius: 8px; 
-    }
+
+    .full-img-container img { max-width: 90%; max-height: 90%; border-radius: 8px; }
     .full-img-container .close-btn { 
       position: absolute; 
-      top: 150px; 
+      top: 20px; 
       right: 20px; 
       font-size: 30px; 
       color: white; 
       cursor: pointer; 
     }
-    .sofa-ready { 
-      background-color: lightgreen; 
+
+    /* Custom Alert Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
     }
-   <!-- nav -->
-   
 
-  #nav-container {
-    position: relative;
-  }
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
 
-
-  #nav-overlay {
-    display: none; 
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 1;
-  }
-
-  
-  #nav-fullscreen {
-    display: flex;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 70%;
-    height: 100%;
-    background-color: #333;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 2;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-  }
-
- 
-  #nav-fullscreen ul {
-    list-style: none;
-    padding: 0;
-  }
-
-  #nav-fullscreen li {
-    margin: 20px 0;
-  }
-
-  #nav-fullscreen a {
-    color: black;
-    font-size: 18px;
-    text-decoration: none;
-    text-transform: uppercase;
-  }
-
-  #nav-fullscreen a:hover {
-    color: #4CAF50; 
-  }
-
-  /* Nav toggle button */
-  #nav-toggle {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    cursor: pointer;
-    z-index: 1;
-  }
-
-  #nav-toggle span {
-    display: block;
-    width: 30px;
-    height: 4px;
-    margin: 6px auto;
-    background-color: black;
-    transition: all 0.3s ease;
-  }
-
-
-  #nav-container.open #nav-fullscreen {
-    transform: translateX(0);
-  }
-
-  #nav-container.open #nav-overlay {
-    display: block;
-  }
-
-  
-  #nav-container.open #nav-toggle span:nth-child(1) {
-    transform: translateY(10px) rotate(45deg);
-  }
-
-  #nav-container.open #nav-toggle span:nth-child(2) {
-    opacity: 0;
-  }
-
-  #nav-container.open #nav-toggle span:nth-child(3) {
-    transform: translateY(-10px) rotate(-45deg);
-  }
+    .close-btn {
+      position: absolute;
+      top: 0;
+      right: 15px;
+      font-size: 30px;
+      cursor: pointer;
+      color: red;
+    }
   </style>
 </head>
 <body>
-    
-<div id="nav-container">
-      <div id="nav-overlay"></div>
-      <nav id="nav-fullscreen">
-            <ul>
-                  <li><a href="https://pioneerfurnituredata.netlify.app/Login.html">Add More Order</a></li>
-                  <li><a href="https://wa.me/+919670744431?">Yusuf Khan </a></li>
-                  <li><a href="https://wa.me/+919919026330?">Amir Khan</a></li>
-                  <li><a href="https://wa.me/+919336379143?">Imran</a></li>
-            </ul>
-      </nav>
-      
-</i>
-      <a id="nav-toggle">
-            <span></span>
-            <span></span>
-            <span></span>
-      </a>
-</div>
   <div class="container">
     <h2>Order List</h2>
     <div id="workList"></div>
@@ -239,6 +145,14 @@
   <div class="full-img-container" id="fullImgContainer">
     <img id="fullImg" src="" alt="Full Image">
     <span class="close-btn" onclick="closeImage()">X</span>
+  </div>
+
+  <!-- Custom Alert Modal -->
+  <div id="customAlert" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeCustomAlert()">&times;</span>
+      <p id="alertMessage">⚠️ Frame Abhi Nhi Bana hai</p>
+    </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/parse/3.2.0/parse.min.js"></script>
@@ -256,9 +170,23 @@
 
       try {
         const results = await query.find();
-        results.forEach((doc) => {
-          createCard(doc);
-        });
+        
+        let workArray = results.map(doc => ({
+          id: doc.id,
+          name: doc.get('name'),
+          size: doc.get('size'),
+          dueDate: doc.get('dueDate'),
+          urgent: doc.get('urgent'),
+          status: doc.get('status') || 'Pending',
+          image: doc.get('image') || ''
+        }));
+
+        workArray.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+
+        document.getElementById('workList').innerHTML = '';
+
+        workArray.forEach(item => createCard(item));
+
       } catch (error) {
         console.error('Error fetching from Back4App:', error);
       }
@@ -267,25 +195,21 @@
     function createCard(item) {
       const card = document.createElement('div');
       card.classList.add('card');
-      
-      const itemId = item.id;
-      const storedStatus = item.get('status') || 'Pending';
-      const imageUrl = item.get('image') || '';
 
       card.innerHTML = `
-        <div class="status">Status: ${storedStatus}</div>
-        <p><strong style="color:blue;">Details:</strong> ${item.get('name')}</p>
-        <p><strong style="color:blue;">Bill No:</strong> ${item.get('size')}</p>
-        <p><strong style="color:blue;">Due Date:</strong> ${item.get('dueDate')}</p>
-        <p><strong style="color:blue;">Urgent:</strong> ${item.get('urgent')}</p>
-        ${imageUrl ? `<img src="${imageUrl}" onclick="openImage('${imageUrl}')">` : 'No image available'}
+        <div class="status">Status: ${item.status}</div>
+        <p><strong style="color:blue;">Details:</strong> ${item.name}</p>
+        <p><strong style="color:blue;">Bill No:</strong> ${item.size}</p>
+        <p><strong style="color:blue;">Due Date:</strong> ${item.dueDate}</p>
+        <p><strong style="color:blue;">Urgent:</strong> ${item.urgent}</p>
+        ${item.image ? `<img src="${item.image}" onclick="openImage('${item.image}')">` : 'No image available'}
         <div class="buttons">
-          <button class="btn frame-ready" onclick="updateStatus('Frame Ready', '${itemId}', this, this.parentElement.parentElement)" ${storedStatus !== 'Pending' ? 'disabled' : ''}>Frame Ready</button>
-          <button class="btn confirm" onclick="confirmStatus('${itemId}', this, this.parentElement.parentElement)" ${storedStatus === 'Sofa Ready' ? 'disabled' : ''}>Confirm</button>
+          <button class="btn frame-ready" onclick="updateStatus('Frame Ready', '${item.id}', this, this.parentElement.parentElement)">Frame Ready</button>
+          <button class="btn confirm" onclick="confirmStatus('${item.id}', this, this.parentElement.parentElement)">Confirm</button>
         </div>
       `;
 
-      if (storedStatus === 'Sofa Ready') {
+      if (item.status === 'Sofa Ready') {
         card.classList.add('sofa-ready');
       }
 
@@ -295,41 +219,28 @@
     async function updateStatusInBack4App(itemId, newStatus) {
       const WorkDetails = Parse.Object.extend('WorkDetails');
       const query = new Parse.Query(WorkDetails);
-      
+
       try {
         const item = await query.get(itemId);
         item.set('status', newStatus);
         await item.save();
-        console.log('Status updated in Back4App:', newStatus);
       } catch (error) {
-        console.error('Error updating status in Back4App:', error);
+        console.error('Error updating status:', error);
       }
     }
 
     function updateStatus(newStatus, itemId, button, card) {
-      const statusElement = card.querySelector('.status');
-      statusElement.textContent = `Status: ${newStatus}`;
-      
+      card.querySelector('.status').textContent = `Status: ${newStatus}`;
       updateStatusInBack4App(itemId, newStatus);
-
       button.disabled = true;
     }
 
     function confirmStatus(itemId, button, card) {
-      const statusElement = card.querySelector('.status');
-      const currentStatus = statusElement.textContent.replace('Status: ', '');
-
-      if (currentStatus === 'Frame Ready') {
-        const newStatus = 'Sofa Ready';
-        statusElement.textContent = `Status: ${newStatus}`;
+      if (card.querySelector('.status').textContent.includes('Frame Ready')) {
+        updateStatus('Sofa Ready', itemId, button, card);
         card.classList.add('sofa-ready');
-        
-        updateStatusInBack4App(itemId, newStatus);
-
-        const buttons = card.querySelectorAll('.btn');
-        buttons.forEach((btn) => btn.disabled = true);
       } else {
-        alert('Frame Abhi Nhi Bana hai');
+        showCustomAlert('⚠️ Frame Abhi Nhi Bana hai');
       }
     }
 
@@ -342,16 +253,27 @@
       document.getElementById('fullImgContainer').style.display = 'none';
     }
 
+    function showCustomAlert(message) {
+      document.getElementById("alertMessage").innerHTML = message;
+      document.getElementById("customAlert").style.display = "flex";
+    }
+
+    function closeCustomAlert() {
+      document.getElementById("customAlert").style.display = "none";
+    }
+
     document.addEventListener('DOMContentLoaded', fetchFromBack4App);
-  </script>
-  <script>
-  const navToggle = document.getElementById('nav-toggle');
-  const navContainer = document.getElementById('nav-container');
-
-  navToggle.addEventListener('click', () => {
-    navContainer.classList.toggle('open');
+    
+ function removeButtons(card) {
+  // Disable both buttons instead of removing
+  const buttons = card.querySelector('.buttons');
+  const buttonsList = buttons.querySelectorAll('button');
+  buttonsList.forEach(button => {
+    button.disabled = true; // Disable the buttons instead of removing
+    button.style.display = 'none'; // Hide the buttons
   });
-</script>
+}
 
+  </script>
 </body>
 </html>
