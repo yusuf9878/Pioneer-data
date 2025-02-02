@@ -134,6 +134,24 @@
       cursor: pointer;
       color: red;
     }
+    .add-order-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 50px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.add-order-btn:hover {
+  background-color: #0056b3;
+}
   </style>
 </head>
 <body>
@@ -154,6 +172,10 @@
       <p id="alertMessage">⚠️ Frame Abhi Nhi Bana hai</p>
     </div>
   </div>
+  
+  <button class="add-order-btn" onclick="window.location.href = 'Login.html';">
+  Add Order
+</button>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/parse/3.2.0/parse.min.js"></script>
   <script>
