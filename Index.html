@@ -1,149 +1,357 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+ <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+ <script src="https://kit.fontawesome.com/bb9a045d57.js" crossorigin="anonymous"></script>
+  <title>Submitted Data</title>
 
-        #cardContainer {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            width: 100%;
-            max-width: 1200px;
-            box-sizing: border-box;
-        }
+      <style>
+    * { padding: 0; 
+    margin: 0; 
+    box-sizing: border-box; 
+    font-family: Arial, sans-serif; 
+    }
+    
+    body {
+      background: #f0f4f8; 
+      padding: 20px;
+    }
+    
+    .container { 
+      max-width: 600px;
+      margin: auto; 
+      background: #fff; 
+      padding: 20px; 
+      border-radius: 10px; 
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    h2 { 
+      text-align: center; 
+      margin-bottom: 20px; 
+      color: #2c4766; 
+    }
+    .card {
+      background: #f9f9f9; 
+      padding: 20px; 
+      border-radius: 8px; 
+      margin-bottom: 20px; 
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
+      position: relative; 
+      border:1px solid black;
+      
+    }
+    .card img { 
+      width: 100%; 
+      max-height: 150px; 
+      object-fit: cover; 
+      border-radius: 5px; 
+      margin-bottom: 10px; 
+      cursor: pointer; 
+    }
+    .buttons { 
+      display: flex; 
+      gap: 10px; 
+    }
+    .btn { 
+      flex: 1; 
+      padding: 10px; 
+      border: none; 
+      border-radius: 45px; 
+      font-weight: bold; 
+      cursor: pointer; 
+      transition: background 0.3s ease; 
+    }
+    .pending { 
+      background: orange; 
+      color: white; 
+    }
+  
+    .frame-ready { 
+      background: skyblue; 
+      color: white; 
+    }
+    .confirm { 
+      background: green; 
+      color: white; 
+    }
+    .status { 
+      position: absolute; 
+      top: 0; 
+      right: 10px; 
+      padding: 5px; 
+      border-radius: 5px; 
+      color: black; 
+      font-weight: bold; 
+    }
+    .full-img-container { 
+      display: none; 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      background: rgba(0, 0, 0, 0.8); 
+      justify-content: center; 
+      align-items: center; 
+    }
+    .full-img-container img { 
+      max-width: 90%; 
+      max-height: 90%; 
+      border-radius: 8px; 
+    }
+    .full-img-container .close-btn { 
+      position: absolute; 
+      top: 150px; 
+      right: 20px; 
+      font-size: 30px; 
+      color: white; 
+      cursor: pointer; 
+    }
+    .sofa-ready { 
+      background-color: lightgreen; 
+    }
+   <!-- nav -->
+   
 
-        .card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            transition: transform 0.3s, background-color 0.3s;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+  #nav-container {
+    position: relative;
+  }
 
-        .card img {
-            width: 50%;
-            height: auto;
-            border-bottom: 1px solid #ddd;
-        }
 
-        .card-content {
-            padding: 15px;
-        }
+  #nav-overlay {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+  }
 
-        .card-content p {
-            margin: 10px 0;
-        }
+  
+  #nav-fullscreen {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 70%;
+    height: 100%;
+    background-color: #333;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
 
-        .card button {
-            margin: 10px;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            color: white;
-            width: calc(100% - 20px);
-            align-self: center;
-        }
+ 
+  #nav-fullscreen ul {
+    list-style: none;
+    padding: 0;
+  }
 
-        .pending { background-color: #ffc107; }
-        .frame-ready { background-color: #17a2b8; }
-        .confirm { background-color: #28a745; }
-        .confirm:disabled { background-color: #ccc; cursor: not-allowed; }
+  #nav-fullscreen li {
+    margin: 20px 0;
+  }
 
-        .card:hover {
-            transform: scale(1.02);
-        }
-    </style>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js";
+  #nav-fullscreen a {
+    color: black;
+    font-size: 18px;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDq1HOD-Aj9enPFMXnTecX-9p3HVe7jAJM",
-            authDomain: "furniture-data-6dfed.firebaseapp.com",
-            projectId: "furniture-data-6dfed",
-            storageBucket: "furniture-data-6dfed.appspot.com",
-            messagingSenderId: "362514009921",
-            appId: "1:362514009921:web:3671e5179954193eb49bc0"
-        };
+  #nav-fullscreen a:hover {
+    color: #4CAF50; 
+  }
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const cardContainer = document.getElementById("cardContainer");
+  /* Nav toggle button */
+  #nav-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    z-index: 1;
+  }
 
-        async function loadCards() {
-            const querySnapshot = await getDocs(collection(db, "cards"));
-            querySnapshot.forEach((doc) => {
-                createCard(doc.data());
-            });
-        }
+  #nav-toggle span {
+    display: block;
+    width: 30px;
+    height: 4px;
+    margin: 6px auto;
+    background-color: black;
+    transition: all 0.3s ease;
+  }
 
-        function createCard(data) {
-            const card = document.createElement("div");
-            card.className = "card";
 
-            data.photoURLs.forEach(photo => {
-                let img = document.createElement("img");
-                img.src = photo;
-                card.appendChild(img);
-            });
+  #nav-container.open #nav-fullscreen {
+    transform: translateX(0);
+  }
 
-            const content = document.createElement('div');
-            content.className = 'card-content';
-            content.innerHTML = `
-                <p><strong>Name:</strong> ${data.name}</p>
-                <p><strong>Size:</strong> ${data.size}</p>
-                <p><strong>Due Date:</strong> ${data.dueDate}</p>
-                <p><strong>Urgent:</strong> ${data.urgent}</p>
-            `;
+  #nav-container.open #nav-overlay {
+    display: block;
+  }
 
-            const btnPending = document.createElement('button');
-            btnPending.className = 'pending';
-            btnPending.textContent = 'Pending';
+  
+  #nav-container.open #nav-toggle span:nth-child(1) {
+    transform: translateY(10px) rotate(45deg);
+  }
 
-            const btnFrameReady = document.createElement('button');
-            btnFrameReady.className = 'frame-ready';
-            btnFrameReady.textContent = 'Frame Ready';
+  #nav-container.open #nav-toggle span:nth-child(2) {
+    opacity: 0;
+  }
 
-            const btnConfirm = document.createElement('button');
-            btnConfirm.className = 'confirm';
-            btnConfirm.textContent = 'Confirm';
-            btnConfirm.disabled = true;
-
-            btnFrameReady.addEventListener('click', () => {
-                btnConfirm.disabled = false;
-            });
-
-            btnConfirm.addEventListener('click', () => {
-                card.style.backgroundColor = '#d4edda';
-            });
-
-            card.appendChild(content);
-            card.appendChild(btnPending);
-            card.appendChild(btnFrameReady);
-            card.appendChild(btnConfirm);
-
-            cardContainer.appendChild(card);
-        }
-
-        loadCards();
-    </script>
+  #nav-container.open #nav-toggle span:nth-child(3) {
+    transform: translateY(-10px) rotate(-45deg);
+  }
+  </style>
 </head>
 <body>
-    <div id="cardContainer"></div>
+    
+<div id="nav-container">
+      <div id="nav-overlay"></div>
+      <nav id="nav-fullscreen">
+            <ul>
+                  <li><a href="#">Add More Order</a></li>
+                  <li><a href="https://wa.me/+919670744431?">Yusuf Khan </a></li>
+                  <li><a href="https://wa.me/+919919026330?">Amir Khan</a></li>
+                  <li><a href="https://wa.me/+919336379143?">Imran</a></li>
+            </ul>
+      </nav>
+      
+</i>
+      <a id="nav-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+      </a>
+</div>
+  <div class="container">
+    <h2>Order List</h2>
+    <div id="workList"></div>
+  </div>
+
+  <div class="full-img-container" id="fullImgContainer">
+    <img id="fullImg" src="" alt="Full Image">
+    <span class="close-btn" onclick="closeImage()">X</span>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/parse/3.2.0/parse.min.js"></script>
+  <script>
+    const PARSE_APP_ID = 'qy8z2SCM8r09qpMunKUCIx4I4OsGMII53b9buurv';
+    const PARSE_SERVER_URL = 'https://parseapi.back4app.com/';
+    const PARSE_JS_KEY = '7qOd9JbeR2M6zXoW9qM5gDMj1o5Heam4Ul2fEp2T';
+
+    Parse.initialize(PARSE_APP_ID, PARSE_JS_KEY);
+    Parse.serverURL = PARSE_SERVER_URL;
+
+    async function fetchFromBack4App() {
+      const WorkDetails = Parse.Object.extend('WorkDetails');
+      const query = new Parse.Query(WorkDetails);
+
+      try {
+        const results = await query.find();
+        results.forEach((doc) => {
+          createCard(doc);
+        });
+      } catch (error) {
+        console.error('Error fetching from Back4App:', error);
+      }
+    }
+
+    function createCard(item) {
+      const card = document.createElement('div');
+      card.classList.add('card');
+      
+      const itemId = item.id;
+      const storedStatus = item.get('status') || 'Pending';
+      const imageUrl = item.get('image') || '';
+
+      card.innerHTML = `
+        <div class="status">Status: ${storedStatus}</div>
+        <p><strong style="color:blue;">Details:</strong> ${item.get('name')}</p>
+        <p><strong style="color:blue;">Bill No:</strong> ${item.get('size')}</p>
+        <p><strong style="color:blue;">Due Date:</strong> ${item.get('dueDate')}</p>
+        <p><strong style="color:blue;">Urgent:</strong> ${item.get('urgent')}</p>
+        ${imageUrl ? `<img src="${imageUrl}" onclick="openImage('${imageUrl}')">` : 'No image available'}
+        <div class="buttons">
+          <button class="btn frame-ready" onclick="updateStatus('Frame Ready', '${itemId}', this, this.parentElement.parentElement)" ${storedStatus !== 'Pending' ? 'disabled' : ''}>Frame Ready</button>
+          <button class="btn confirm" onclick="confirmStatus('${itemId}', this, this.parentElement.parentElement)" ${storedStatus === 'Sofa Ready' ? 'disabled' : ''}>Confirm</button>
+        </div>
+      `;
+
+      if (storedStatus === 'Sofa Ready') {
+        card.classList.add('sofa-ready');
+      }
+
+      document.getElementById('workList').appendChild(card);
+    }
+
+    async function updateStatusInBack4App(itemId, newStatus) {
+      const WorkDetails = Parse.Object.extend('WorkDetails');
+      const query = new Parse.Query(WorkDetails);
+      
+      try {
+        const item = await query.get(itemId);
+        item.set('status', newStatus);
+        await item.save();
+        console.log('Status updated in Back4App:', newStatus);
+      } catch (error) {
+        console.error('Error updating status in Back4App:', error);
+      }
+    }
+
+    function updateStatus(newStatus, itemId, button, card) {
+      const statusElement = card.querySelector('.status');
+      statusElement.textContent = `Status: ${newStatus}`;
+      
+      updateStatusInBack4App(itemId, newStatus);
+
+      button.disabled = true;
+    }
+
+    function confirmStatus(itemId, button, card) {
+      const statusElement = card.querySelector('.status');
+      const currentStatus = statusElement.textContent.replace('Status: ', '');
+
+      if (currentStatus === 'Frame Ready') {
+        const newStatus = 'Sofa Ready';
+        statusElement.textContent = `Status: ${newStatus}`;
+        card.classList.add('sofa-ready');
+        
+        updateStatusInBack4App(itemId, newStatus);
+
+        const buttons = card.querySelectorAll('.btn');
+        buttons.forEach((btn) => btn.disabled = true);
+      } else {
+        alert('Frame Abhi Nhi Bana hai');
+      }
+    }
+
+    function openImage(imgSrc) {
+      document.getElementById('fullImg').src = imgSrc;
+      document.getElementById('fullImgContainer').style.display = 'flex';
+    }
+
+    function closeImage() {
+      document.getElementById('fullImgContainer').style.display = 'none';
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchFromBack4App);
+  </script>
+  <script>
+  const navToggle = document.getElementById('nav-toggle');
+  const navContainer = document.getElementById('nav-container');
+
+  navToggle.addEventListener('click', () => {
+    navContainer.classList.toggle('open');
+  });
+</script>
+
 </body>
 </html>
