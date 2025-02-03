@@ -219,10 +219,15 @@
 
       card.innerHTML = `
         <div class="status">Status: ${item.status}</div>
+        <br>
         <p><strong style="color:blue;">Details:</strong> ${item.name}</p>
+        <br>
         <p><strong style="color:blue;">Bill No:</strong> ${item.size}</p>
+        <br>
         <p><strong style="color:blue;">Due Date:</strong> ${item.dueDate}</p>
+        <br>
         <p><strong style="color:blue;">Urgent:</strong> ${item.urgent}</p>
+        
         ${item.image ? `<img src="${item.image}" onclick="openImage('${item.image}')">` : 'No image available'}
         <div class="buttons">
           <button class="btn frame-ready" onclick="updateStatus('Frame Ready', '${item.id}', this, this.parentElement.parentElement)">Frame Ready</button>
