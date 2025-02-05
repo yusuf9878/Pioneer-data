@@ -87,12 +87,51 @@
             width: 50px;
             height: 50px;
             animation: spin 2s linear infinite;
-            margin: 20px auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            margin: 0;
         }
 
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        /* Alert Modal Styles */
+        .alert-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .alert-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            width: 300px;
+        }
+
+        .alert-content button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .alert-content button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -126,6 +165,14 @@
     <div id="loader" class="loader"></div>
 </div>
 
+<!-- Custom Alert Modal -->
+<div id="custom-alert" class="alert-modal">
+    <div class="alert-content">
+        <span id="alert-message"></span>
+        <button onclick="closeAlert()">OK</button>
+    </div>
+</div>
+
 <script>
     // Set the default date to today's date
     const currentDate = new Date().toISOString().split('T')[0];
@@ -157,21 +204,28 @@
 
         try {
             await order.save();
-            alert("Order submitted successfully!");
-
-            // Reset form after submission
-            document.getElementById('submitForm').reset();
-            document.getElementById('loader').style.display = "none";
-            document.querySelector('.submit-btn').disabled = false;
-
-            window.location.href = "index.html"; // Redirect to index.html
+            showAlert("Order submitted successfully!");
         } catch (error) {
-            console.error("Error saving order:", error);
-            alert("Error submitting order. Please try again.");
+            showAlert("There was an error submitting your order.");
+        } finally {
+            // Hide loading animation and enable submit button
             document.getElementById('loader').style.display = "none";
             document.querySelector('.submit-btn').disabled = false;
         }
     });
+
+    // Function to show custom alert
+    function showAlert(message) {
+        const alertMessage = document.getElementById("alert-message");
+        const alertModal = document.getElementById("custom-alert");
+        alertMessage.textContent = message;
+        alertModal.style.display = "flex";
+    }
+
+    // Function to close the alert
+    function closeAlert() {
+        document.getElementById("custom-alert").style.display = "none";
+    }
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/parse/3.4.3/parse.min.js"></script>
