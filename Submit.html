@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="blue">
+    <title>Submit Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+            border-radius: 8px;
+            margin-top: 50px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        input[type=text], input[type=date], textarea, select {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        input[type=checkbox] {
+            margin-right: 10px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+
+        .submit-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        h2{
+            text-align: center;
+        }
+
+        /* Loading animation */
+        .loader {
+            display: none;
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <form action="" id="submitForm">
+        <h2>Pioneer Login</h2>
+        <label for="billn">Bill No.</label>
+        <input type="text" id="billn" name="billn" required>
+
+        <label for="details">Details</label>
+        <textarea id="details" name="details" rows="4" required></textarea>
+
+        <label for="dueDate">Due Date</label>
+        <input type="date" name="dueDate" id="dueDate" required>
+        <br>
+
+        <label for="imageUpload">Upload Image:</label>
+        <input type="file" id="imageUpload" name="imageUpload">
+        <br><br>
+
+        <label for="checkbox">Urgent</label>
+        <input type="checkbox" name="urgent" id="checkbox">
+        
+        <button type="submit" class="submit-btn">Submit Order</button>
+        <a href="" style="text-align:right; display:block;">Forgot Password!</a>
+    </form>
+
+    <!-- Loading Animation -->
+    <div id="loader" class="loader"></div>
+</div>
+
+<script>
+    // Set the default date to today's date
+    const currentDate = new Date().toISOString().split('T')[0];
+    document.getElementById('dueDate').value = currentDate;
+
+    // Handle form submission
+    document.getElementById('submitForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        // Show the loading animation
+        document.getElementById('loader').style.display = "block";
+        document.querySelector('.submit-btn').disabled = true;
+
+        const Order = Parse.Object.extend("Orders");
+        const order = new Order();
+
+        order.set("billNumber", document.getElementById('billn').value);
+        order.set("details", document.getElementById('details').value);
+        order.set("dueDate", new Date(document.getElementById('dueDate').value));
+        order.set("urgent", document.getElementById('checkbox').checked);
+
+        // Image Handling
+        let fileUpload = document.getElementById('imageUpload').files[0];
+        if (fileUpload) {
+            let parseFile = new Parse.File(fileUpload.name, fileUpload);
+            await parseFile.save();
+            order.set("image", parseFile);
+        }
+
+        try {
+            await order.save();
+            alert("Order submitted successfully!");
+
+            // Reset form after submission
+            document.getElementById('submitForm').reset();
+            document.getElementById('loader').style.display = "none";
+            document.querySelector('.submit-btn').disabled = false;
+
+            window.location.href = "index.html"; // Redirect to index.html
+        } catch (error) {
+            console.error("Error saving order:", error);
+            alert("Error submitting order. Please try again.");
+            document.getElementById('loader').style.display = "none";
+            document.querySelector('.submit-btn').disabled = false;
+        }
+    });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parse/3.4.3/parse.min.js"></script>
+<script>
+    Parse.initialize("qy8z2SCM8r09qpMunKUCIx4I4OsGMII53b9buurv", "7qOd9JbeR2M6zXoW9qM5gDMj1o5Heam4Ul2fEp2T"); // Replace with Back4App credentials
+    Parse.serverURL = "https://parseapi.back4app.com/";
+</script>
+
+</body>
+</html>

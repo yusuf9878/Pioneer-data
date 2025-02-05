@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="blue">
+  <title>Horizontal Navigation Bar</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/parse/3.4.3/parse.min.js"></script>
+  <style>
+    /* Reset and Base Styles */
+    * { padding: 0; margin: 0; }
+    body { transition: background-color 0.5s ease, color 0.5s ease, box-shadow 0.5s ease; }
+    /* Day Mode */
+    body.day-mode { background-color: #ffffff; color: #000; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    /* Night Mode */
+    body.night-mode { background-color: #121212; color: #fff; box-shadow: 0 0 20px rgba(255,255,255,0.5); }
+    /* Navbar */
+    .navbar {
+      display: flex; width: 100%; height: 60px; justify-content: center; align-items: center;
+      background-color: #333; padding: 10px 0; box-shadow: 0 0 yellow inset;
+    }
+    .navbar a {
+      color: #f2f2f2; text-decoration: none; padding: 14px 20px;
+      font-size: 18px; font-weight: bold; transition: 0.3s;
+    }
+    .navbar a:hover { background-color: rgba(255,255,255,0.2); color: yellow; }
+    /* Time Display */
+    .time {
+      display: flex; justify-content: center; text-align: center; font-size: 20px;
+      margin-top: 10px; font-weight: bold; background: transparent;
+    }
+    body.day-mode .time { color: #000; }
+    body.night-mode .time { color: #fff; }
+    /* Toggle Button */
+    .toggle-btn {
+      padding: 10px 20px; background-color: #333; color: #fff;
+      border: none; border-radius: 5px; cursor: pointer; font-size: 18px; font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    .toggle-btn:hover { background-color: #444; }
+    /* Cart Container */
+    #cartContainer { margin: 20px auto; padding: 10px; max-width: 800px; }
+    /* Cart Items */
+    .cart-item {
+      border: 1px solid #ddd; border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1); padding: 15px; margin-bottom: 20px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .cart-item:hover {
+      transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+    .cart-item img {
+      max-width: 100%; width: 100%; height: auto; border-radius: 4px;
+      margin-top: 10px; border: 1px solid blue;
+    }
+    .cart-item p { margin: 8px 0; font-size: 16px; }
+    .cart-item hr { margin: 15px 0; border: none; border-top: 1px solid #eee; }
+    /* Cart colors for Day/Night */
+    body.day-mode .cart-item { background-color: #ffffff; color: #000; }
+    body.night-mode .cart-item { background-color: #333; color: #fff; }
+    /* Buttons */
+    .btn1, .btn2 {
+      height: 50px; width: 48%; display: inline-block; text-align: center;
+      border: none; border-radius: 35px;
+    }
+    .btn1 { background-color: #04AA6D; font-size: 19px; }
+    .btn2 { font-size: 19px; background-color: #555555; }
+    /* Status Labels */
+    .status { font-weight: bold; padding: 5px 10px; border-radius: 5px; }
+    .status-pending { background-color: orange; color: white; }
+    .status-frame-ready { background-color: blue; color: white; }
+    .status-sofa-ready { background-color: green; color: white; }
+    /* Highlight for orders ready for history */
+    .highlight {
+      border: 2px solid #ff0; /* Yellow border */
+      box-shadow: 0 0 15px rgba(255,255,0,0.8);
+    }
+    /* Popup for User Role */
+    .popup {
+      display: flex; justify-content: center; align-items: center;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5); z-index: 1000;
+    }
+    .popup-content {
+      background: red; padding: 20px; border-radius: 8px; text-align: center;
+    }
+    .popup button {
+      padding: 10px 20px; margin: 10px; border-radius: 5px;
+      font-weight: bold; border: none; font-size: 16px; cursor: pointer;
+      transition: box-shadow 0.3s ease-in-out;
+      box-shadow: 0 0 5px rgba(4,170,109,0.5);
+    }
+    .popup button:hover {
+      box-shadow: 0 0 15px rgba(4,170,109,1);
+    }
+    
+      .add-order-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 50px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.add-order-btn:hover {
+  background-color: #0056b3;
+}
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <a href="#home">Home</a>
+    <a href="#services">History</a>
+    <a href="#about">Author</a>
+    <button class="toggle-btn" id="dayNightToggle">Day/Night</button>
+  </div>
+
+  <!-- Time Display -->
+  <div class="time" id="clock">00:00:00 AM/PM Sunday</div>
+
+  <!-- Cart Container -->
+  <div id="cartContainer"></div>
+
+  <!-- Popup for User Role Selection -->
+  <div id="userPopup" class="popup" style="display:none;">
+    <div class="popup-content">
+      <h2>Who are you?</h2>
+      <button onclick="setUserRole('guest')">Guest</button>
+      <button onclick="setUserRole('author')">Author</button>
+    </div>
+  </div>
+
+<button class="add-order-btn" onclick="window.location.href = 'Login.html';">
+  Add Order
+</button>
+
+
+
+  <script>
+    // Global variable for user role
+    let userRole = null;
+
+    /* ---------- Time Management ---------- */
+    function updateClock() {
+      let now = new Date();
+      let hours = now.getHours();
+      let minutes = now.getMinutes();
+      let seconds = now.getSeconds();
+      let dayIndex = now.getDay();
+      let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      let dayName = days[dayIndex];
+      let ampm = hours >= 12 ? "PM" : "AM";
+      hours = hours % 12 || 12;
+      let formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')} ${ampm} | ${dayName}`;
+      document.getElementById("clock").textContent = formattedTime;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    /* ---------- Day/Night Toggle ---------- */
+    let isNightMode = localStorage.getItem("isNightMode") === "true";
+    const bodyEl = document.body;
+    const dayNightToggle = document.getElementById("dayNightToggle");
+    if (isNightMode) {
+      bodyEl.classList.add("night-mode");
+      dayNightToggle.textContent = "Day Mode";
+    } else {
+      bodyEl.classList.add("day-mode");
+      dayNightToggle.textContent = "Night Mode";
+    }
+    dayNightToggle.addEventListener("click", () => {
+      if (isNightMode) {
+        bodyEl.classList.remove("night-mode");
+        bodyEl.classList.add("day-mode");
+        dayNightToggle.textContent = "Night Mode";
+      } else {
+        bodyEl.classList.remove("day-mode");
+        bodyEl.classList.add("night-mode");
+        dayNightToggle.textContent = "Day Mode";
+      }
+      isNightMode = !isNightMode;
+      localStorage.setItem("isNightMode", isNightMode);
+    });
+
+    /* ---------- User Role Popup ---------- */
+    window.addEventListener("load", () => {
+      // Show popup on load
+      document.getElementById("userPopup").style.display = "flex";
+    });
+
+    function setUserRole(role) {
+      if (role === "guest") {
+        userRole = "guest";
+        localStorage.setItem("role", "guest");
+        alert("You are in guest mode. You can't take any action.");
+        disableButtons();
+      } else if (role === "author") {
+        let id = prompt("Enter ID (Default: Admin):", "Admin");
+        let pass = prompt("Enter Password (❌❌❌):", "****");
+        if (id === "Admin" && pass === "1234") {
+          userRole = "author";
+          localStorage.setItem("role", "author");
+          alert("Welcome, Author! You can take action.");
+          enableButtons();
+        } else {
+          alert("Invalid credentials. You will be treated as guest.");
+          userRole = "guest";
+          localStorage.setItem("role", "guest");
+          disableButtons();
+        }
+      }
+      // Hide popup after role selection
+      document.getElementById("userPopup").style.display = "none";
+    }
+
+    function disableButtons() {
+      const buttons = document.querySelectorAll(".btn1, .btn2");
+      buttons.forEach(button => {
+        button.disabled = true;
+        button.style.cursor = "not-allowed";
+      });
+    }
+
+    function enableButtons() {
+      const buttons = document.querySelectorAll(".btn1, .btn2");
+      buttons.forEach(button => {
+        button.disabled = false;
+        button.style.cursor = "pointer";
+      });
+    }
+
+    /* ---------- Load Orders ---------- */
+    async function loadOrders() {
+      Parse.initialize("qy8z2SCM8r09qpMunKUCIx4I4OsGMII53b9buurv", "7qOd9JbeR2M6zXoW9qM5gDMj1o5Heam4Ul2fEp2T");
+      Parse.serverURL = "https://parseapi.back4app.com/";
+      const Order = Parse.Object.extend("Orders");
+      const query = new Parse.Query(Order);
+      try {
+        let results = await query.find();
+        results = results.map(order => {
+          return {
+            object: order,
+            billNumber: order.get("billNumber"),
+            details: order.get("details"),
+            dueDate: new Date(order.get("dueDate")),
+            formattedDueDate: formatDate(order.get("dueDate")),
+            urgent: order.get("urgent") ? "🔴 Urgent" : "✅ Normal",
+            image: order.get("image") ? `<img src="${order.get("image").url()}" width="100">` : "",
+            status: order.get("status") || "PENDING"
+          };
+        }).sort((a, b) => a.dueDate - b.dueDate);
+        let cartHTML = "<h2>Your Orders</h2>";
+        results.forEach(order => {
+          let statusClass = getStatusClass(order.status);
+          cartHTML += `
+            <div class="cart-item" id="order-${order.billNumber}">
+              <p><strong style="color:red;">Status:</strong> 
+                <span id="status-${order.billNumber}" class="status ${statusClass}">${order.status}</span>
+              </p>
+              <p><strong style="color:red;">Bill No:</strong> ${order.billNumber}</p>
+              <p><strong style="color:red;">Details:</strong> ${order.details}</p>
+              <p><strong style="color:red;">Due Date:</strong> ${order.formattedDueDate}</p>
+              <p><strong style="color:red;">Time:</strong> ${order.urgent}</p>
+              ${order.image}
+              <hr>
+              <button class="btn1" id="frame-${order.billNumber}" onclick="updateStatus('${order.billNumber}', 'FRAME READY')" ${order.status !== 'PENDING' ? 'style="display:none;"' : ''}>
+                Frame Ready
+              </button>
+              <button class="btn2" id="sofa-${order.billNumber}" onclick="updateStatus('${order.billNumber}', 'SOFA READY ✔️')" ${order.status !== 'FRAME READY' ? 'style="display:none;"' : ''}>
+                Sofa Ready
+              </button>
+            </div>
+          `;
+        });
+        document.getElementById("cartContainer").innerHTML = cartHTML;
+        // Check role after orders load – if not author, disable buttons.
+        if (userRole !== "author") { disableButtons(); } else { enableButtons(); }
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    }
+
+    /* ---------- Update Order Status ---------- */
+    async function updateStatus(billNumber, newStatus) {
+      if (userRole !== "author") {
+        alert("Guests cannot perform actions.");
+        return;
+      }
+      let Order = Parse.Object.extend("Orders");
+      let query = new Parse.Query(Order);
+      query.equalTo("billNumber", billNumber);
+      try {
+        let order = await query.first();
+        if (order) {
+          order.set("status", newStatus);
+          // Set readyTime if status becomes "SOFA READY ✔️"
+          if(newStatus === "SOFA READY ✔️"){
+            order.set("readyTime", new Date());
+          }
+          await order.save();
+          let statusElement = document.getElementById(`status-${billNumber}`);
+          statusElement.textContent = newStatus;
+          statusElement.className = `status ${getStatusClass(newStatus)}`;
+          if (newStatus === "FRAME READY") {
+            document.getElementById(`frame-${billNumber}`).style.display = "none";
+            document.getElementById(`sofa-${billNumber}`).style.display = "inline-block";
+          } else if (newStatus === "SOFA READY ✔️") {
+            document.getElementById(`sofa-${billNumber}`).style.display = "none";
+            // Highlight the order item to show it is ready for history move
+            let orderElement = document.getElementById(`order-${billNumber}`);
+            orderElement.classList.add("highlight");
+            // Set a timer to permanently remove order (simulate moving to history)
+            // For testing, delay is 10 seconds; production delay: 86400000 ms for 24 hours
+            const delay = 10000; 
+            setTimeout(() => {
+              moveOrderToHistory(billNumber, order);
+            }, delay);
+          }
+        }
+      } catch (error) {
+        console.error("Error updating order:", error);
+      }
+    }
+
+   // Function to move order to History (HistoryOrders class) and remove from Orders
+function moveOrderToHistory(billNumber, order) {
+  // Create a new Parse Object for HistoryOrders
+  const History = Parse.Object.extend("HistoryOrders");
+  let historyEntry = new History();
+
+  // Set required fields: billNumber and moveDate (current date/time)
+  historyEntry.set("billNumber", billNumber);
+  historyEntry.set("moveDate", new Date());
+
+  // Save the history record in Parse
+  historyEntry.save().then(() => {
+    // After successful save, delete the original order from Orders
+    order.destroy().then(() => {
+      let orderElement = document.getElementById(`order-${billNumber}`);
+      if (orderElement) {
+        orderElement.remove();
+      }
+      console.log(`Order ${billNumber} moved to history with move date ${new Date()}.`);
+    }).catch(error => {
+      console.error("Error destroying order:", error);
+    });
+  }).catch(error => {
+    console.error("Error saving order to history:", error);
+  });
+}
+    function getStatusClass(status) {
+      switch (status) {
+        case "PENDING": return "status-pending";
+        case "FRAME READY": return "status-frame-ready";
+        case "SOFA READY ✔️": return "status-sofa-ready";
+        default: return "";
+      }
+    }
+
+    function formatDate(dateString) {
+      let date = new Date(dateString);
+      let day = String(date.getDate()).padStart(2, "0");
+      let monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      let month = monthNames[date.getMonth()];
+      let year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    }
+
+    // Load orders after a short delay so that popup role selection is processed
+    setTimeout(loadOrders, 500);
+  </script>
+</body>
+</html>
