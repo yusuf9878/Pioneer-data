@@ -28,6 +28,7 @@
     .time {
       display: flex; justify-content: center; text-align: center; font-size: 20px;
       margin-top: 10px; font-weight: bold; background: transparent;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
     body.day-mode .time { color: #000; }
     body.night-mode .time { color: #fff; }
@@ -59,12 +60,31 @@
     body.day-mode .cart-item { background-color: #ffffff; color: #000; }
     body.night-mode .cart-item { background-color: #333; color: #fff; }
     /* Buttons */
+    
     .btn1, .btn2 {
-      height: 50px; width: 48%; display: inline-block; text-align: center;
-      border: none; border-radius: 35px;
+      height: 50px; 
+      width: 48%; 
+      display: inline-block; 
+      text-align: center;
+      border: none;
+       border-radius: 25px;
+      color:#0ff;
+      cursor:pointer;
+      text-transform: uppercase;
+      background: transparent;
+      transient:0.3s ease-in-out;
+      box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+      }
+      .btn1, .btn2:hover{
+          color:#000;
+          background:0ff;
+          box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
     }
     .btn1 { background-color: #555555; font-size: 19px; }
+    
     .btn2 { font-size: 19px; background-color: #555555; }
+    
+    
     /* Status Labels */
     .status { font-weight: bold; padding: 5px 10px; border-radius: 5px; }
     .status-pending { background-color: orange; color: white; }
@@ -88,7 +108,7 @@
       padding: 10px 20px; margin: 10px; border-radius: 5px;
       font-weight: bold; border: none; font-size: 16px; cursor: pointer;
       transition: box-shadow 0.3s ease-in-out;
-      box-shadow: 0 0 5px rgba(4,170,109,0.5);
+      box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
     }
     .popup button:hover {
       box-shadow: 0 0 15px rgba(4,170,109,1);
@@ -111,6 +131,8 @@
 
 .add-order-btn:hover {
   background-color: #0056b3;
+  transient:0.3s ease-in-out;
+      box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
 }
   </style>
 </head>
@@ -119,7 +141,7 @@
   <div class="navbar">
     <a href="#">Home</a>
     <a href="https://pioneerfurnituredata.netlify.app/history.html">History</a>
-    <a href="https://pioneerfurnituredata.netlify.app/submit">Author</a>
+    <a href="https://pioneerfurnituredata.netlify.app/submit">Add Order</a>
     <button class="toggle-btn" id="dayNightToggle">Day/Night</button>
   </div>
 
@@ -166,29 +188,43 @@
     updateClock();
 
     /* ---------- Day/Night Toggle ---------- */
-    let isNightMode = localStorage.getItem("isNightMode") === "true";
-    const bodyEl = document.body;
-    const dayNightToggle = document.getElementById("dayNightToggle");
-    if (isNightMode) {
-      bodyEl.classList.add("night-mode");
-      dayNightToggle.textContent = "Day Mode";
-    } else {
-      bodyEl.classList.add("day-mode");
-      dayNightToggle.textContent = "Night Mode";
-    }
-    dayNightToggle.addEventListener("click", () => {
-      if (isNightMode) {
-        bodyEl.classList.remove("night-mode");
-        bodyEl.classList.add("day-mode");
-        dayNightToggle.textContent = "Night Mode";
-      } else {
-        bodyEl.classList.remove("day-mode");
-        bodyEl.classList.add("night-mode");
-        dayNightToggle.textContent = "Day Mode";
-      }
-      isNightMode = !isNightMode;
-      localStorage.setItem("isNightMode", isNightMode);
-    });
+    // Check if "isNightMode" already exists in localStorage
+let storedMode = localStorage.getItem("isNightMode");
+let isNightMode;
+if (storedMode === null) {
+  // Agar localStorage mein value nahin mili, toh current time ke hisaab se set karein
+  const hour = new Date().getHours();
+  isNightMode = (hour >= 18 || hour < 6); // Night mode between 6PM and 6AM
+  localStorage.setItem("isNightMode", isNightMode);
+} else {
+  isNightMode = storedMode === "true";
+}
+
+const bodyEl = document.body;
+const dayNightToggle = document.getElementById("dayNightToggle");
+
+// Set initial mode based on isNightMode value
+if (isNightMode) {
+  bodyEl.classList.add("night-mode");
+  dayNightToggle.textContent = "Day Mode";
+} else {
+  bodyEl.classList.add("day-mode");
+  dayNightToggle.textContent = "Night Mode";
+}
+
+dayNightToggle.addEventListener("click", () => {
+  if (isNightMode) {
+    bodyEl.classList.remove("night-mode");
+    bodyEl.classList.add("day-mode");
+    dayNightToggle.textContent = "Night Mode";
+  } else {
+    bodyEl.classList.remove("day-mode");
+    bodyEl.classList.add("night-mode");
+    dayNightToggle.textContent = "Day Mode";
+  }
+  isNightMode = !isNightMode;
+  localStorage.setItem("isNightMode", isNightMode);
+});
 
     /* ---------- User Role Popup ---------- */
     window.addEventListener("load", () => {
