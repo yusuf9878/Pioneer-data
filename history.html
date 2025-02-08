@@ -113,7 +113,7 @@
         // Loop through each result and display
         results.forEach(order => {
           const billNumber = order.get("billNumber");
-          const readyDate = new Date(order.get("readyDate"));
+          const readyDate = new Date(order.get("moveDate"));
           const formattedReadyDate = `${String(readyDate.getDate()).padStart(2, "0")}/${String(readyDate.getMonth() + 1).padStart(2, "0")}/${readyDate.getFullYear()}`;
 
           historyHTML += `
