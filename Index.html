@@ -355,7 +355,7 @@ dayNightToggle.addEventListener("click", () => {
             orderElement.classList.add("highlight");
             // Set a timer to permanently remove order (simulate moving to history)
             // For testing, delay is 10 seconds; production delay: 86400000 ms for 24 hours
-            const delay = 60000; 
+            const delay = 1000; 
             setTimeout(() => {
               moveOrderToHistory(billNumber, order);
             }, delay);
