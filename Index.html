@@ -7,58 +7,135 @@
   <title>Pioneer Furniture Order's</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/parse/3.4.3/parse.min.js"></script>
   <style>
-    /* Reset and Base Styles */
-    * { padding: 0; margin: 0; }
-    body { transition: background-color 0.5s ease, color 0.5s ease, box-shadow 0.5s ease; }
-    /* Day Mode */
-    body.day-mode { background-color: #ffffff; color: #000; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    /* Night Mode */
-    body.night-mode { background-color: #121212; color: #fff; box-shadow: 0 0 20px rgba(255,255,255,0.5); }
-    /* Navbar */
+
+  * { 
+    padding: 0; 
+    margin: 0;
+     }
+     
+    body { font-family: 'Arial', sans-serif;
+            background-color:#ffffff ;
+            color: #000;
+            }
+   /* navbar css start */
+   
     .navbar {
-      display: flex; width: 100%; height: 60px; justify-content: center; align-items: center;
-      background-color: #333; padding: 10px 0; box-shadow: 0 0 yellow inset;
+      display: flex;
+        justify-content: center;
+        width: 100%;
+        height: 50px;
+        background-color: #333;
+        padding: 10px 0;
     }
     .navbar a {
-      color: #f2f2f2; text-decoration: none; padding: 14px 20px;
-      font-size: 18px; font-weight: bold; transition: 0.3s;
+        color: #fff;
+        text-decoration: none;
+        margin: 0 10px;
+        font-size: 18px;
+        transition: 0.2s;
+        cursor: pointer;
     }
-    .navbar a:hover { background-color: rgba(255,255,255,0.2); color: yellow; }
-    /* Time Display */
+    .navbar a:hover { 
+        color:blue;
+        color: #3910f1;
+         }
+  .authbtn {
+    background-color: transparent;
+    border: none;
+    font-size: 18px;
+    color: #fff;
+    margin: 0 10px;
+    transition: 0.2s;
+    cursor: pointer;
+    font-weight:bold;
+}
+     h1{
+           background-color: #333;
+            color: #fff;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 24px;
+            margin: 0;
+            text-align:center;
+  }
+  /* navbar end*/
+  
+  /* time Start */
     .time {
-      display: flex; justify-content: center; text-align: center; font-size: 20px;
-      margin-top: 10px; font-weight: bold; background: transparent;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: center;
+      text-align: center;
+      font-size: 20px;
+      margin-top: 10px; 
+      font-weight: bold; 
+      
     }
-    body.day-mode .time { color: #000; }
-    body.night-mode .time { color: #fff; }
-    /* Toggle Button */
+   /* time  End*/
     .toggle-btn {
-      padding: 10px 20px; background-color: #333; color: #fff;
-      border: none; border-radius: 5px; cursor: pointer; font-size: 18px; font-weight: bold;
+      padding: 10px 20px;
+      background-color: #333; 
+      color: #fff;
+      border: none; 
+      border-radius: 5px; 
+      cursor: pointer; 
+      font-size: 18px; 
+      font-weight: bold;
       transition: background-color 0.3s;
     }
-    .toggle-btn:hover { background-color: #444; }
-    /* Cart Container */
-    #cartContainer { margin: 20px auto; padding: 10px; max-width: 800px; }
+    
+    .toggle-btn:hover {
+     background-color: #444;
+      }
+    
+   /* cart design*/
+   
+    #cartContainer { 
+    margin: 20px auto; 
+    padding: 10px; 
+    max-width: 800px; 
+    }
+    
+    /* cart end*/
+    
     /* Cart Items */
+    
     .cart-item {
-      border: 1px solid #ddd; border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1); padding: 15px; margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);   
+      padding: 15px;
+      margin-bottom: 20px;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
+    
     .cart-item:hover {
-      transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
+    
     .cart-item img {
-      max-width: 100%; width: 100%; height: auto; border-radius: 4px;
-      margin-top: 10px; border: 1px solid blue;
+      max-width: 100%; 
+      width: 100%; 
+      height: auto; 
+      border-radius: 4px;
+      margin-top: 10px;
+      border: 1px solid blue;
     }
-    .cart-item p { margin: 8px 0; font-size: 16px; }
-    .cart-item hr { margin: 15px 0; border: none; border-top: 1px solid #eee; }
-    /* Cart colors for Day/Night */
-    body.day-mode .cart-item { background-color: #ffffff; color: #000; }
-    body.night-mode .cart-item { background-color: #333; color: #fff; }
+    /* cart p start */
+    .cart-item p {
+                 margin: 8px 0; 
+                 font-size: 16px; 
+     }
+     
+     /* cart end */
+     
+    .cart-item hr {
+     margin: 15px 0; 
+     border: none; 
+     border-top: 1px solid #eee;
+      }
+      
+  
     /* Buttons */
     
     .btn1, .btn2 {
@@ -67,52 +144,105 @@
       display: inline-block; 
       text-align: center;
       border: none;
-       border-radius: 25px;
+      border-radius: 5px;
       color:#0ff;
       cursor:pointer;
       text-transform: uppercase;
       background: transparent;
       transient:0.3s ease-in-out;
       box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+      text-align:center;
       }
+      
       .btn1, .btn2:hover{
           color:#000;
           background:0ff;
           box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
     }
-    .btn1 { background-color: #555555; font-size: 19px; }
     
-    .btn2 { font-size: 19px; background-color: #555555; }
+    .btn1 { 
+    background-color: #555555; 
+    font-size: 19px; 
+    }
     
+    .btn2 { 
+    font-size: 19px; 
+    background-color: #555555;
+     }
     
     /* Status Labels */
-    .status { font-weight: bold; padding: 5px 10px; border-radius: 5px; }
-    .status-pending { background-color: orange; color: white; }
-    .status-frame-ready { background-color: blue; color: white; }
-    .status-sofa-ready { background-color: green; color: white; }
+    
+    .status { 
+           font-weight: bold; 
+           padding: 5px 10px; 
+           border-radius: 5px; 
+    }
+    /* status  css start*/
+    
+    .status-pending { 
+              background-color: orange;
+              color: white;
+               }
+               
+    .status-frame-ready { 
+             background-color: blue; 
+             color: white; 
+             
+             }
+             
+    .status-sofa-ready { 
+              background-color: green; 
+              color: white;
+              
+     }
+     /* button  end*/
+     
     /* Highlight for orders ready for history */
     .highlight {
-      border: 2px solid #ff0; /* Yellow border */
+      border: 2px solid #ff0;
       box-shadow: 0 0 15px rgba(255,255,0,0.8);
     }
+    
     /* Popup for User Role */
     .popup {
-      display: flex; justify-content: center; align-items: center;
-      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.5); z-index: 1000;
+      display: flex; 
+      justify-content: center; 
+      align-items: center;
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      right: 0; 
+      bottom: 0;
+      background: rgba(0,0,0,0.5); 
+      z-index: 1000;
     }
+    
     .popup-content {
-      background:#540000 ; padding: 20px; border-radius: 8px; text-align: center;
+      border:1px solid #fff;
+      backdrop-filter:blur(20px);
+      box-shadow: 0px 0px 15px 5px rgba(255, 255, 255, 55);
+      padding: 20px; 
+      border-radius: 8px; 
+      text-align: center;
     }
+    
     .popup button {
-      padding: 10px 20px; margin: 10px; border-radius: 5px;
-      font-weight: bold; border: none; font-size: 16px; cursor: pointer;
-      transition: box-shadow 0.3s ease-in-out;
-      box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+      padding: 10px 20px;
+      margin: 10px; 
+      border-radius: 5px;
+      font-weight: bold; 
+      border: none; 
+      font-size: 16px; 
+      cursor: pointer;
+      transition: 
+      box-shadow 0.3s ease-in-out;
     }
     .popup button:hover {
       box-shadow: 0 0 15px rgba(4,170,109,1);
+      background-color:blue;
     }
+    
+    /* order button start*/
     
       .add-order-btn {
   position: fixed;
@@ -134,15 +264,32 @@
   transient:0.3s ease-in-out;
       box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
 }
+/* order button end*/
+.navbar a.active {
+    color: #f39c12; 
+    border-bottom: 2px solid #f39c12;
+}
+.popup-content h2{
+    color:#fff;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); 
+}
+h2{
+    text-align:center;
+}
   </style>
 </head>
 <body>
+     <!-- Header Section -->
+    <header>
+        <h1>PIONEER FURNITURE</h1>
+    </header>
+    <!-- End Header Section -->
   <!-- Navbar -->
   <div class="navbar">
-    <a href="#">Home</a>
+    <a href="https://pioneerfurnituredata.netlify.app/">Home</a>
     <a href="https://pioneerfurnituredata.netlify.app/history.html">History</a>
-    <a href="https://pioneerfurnituredata.netlify.app/submit">Add Order</a>
-    <button class="toggle-btn" id="dayNightToggle">Day/Night</button>
+    <a href="https://pioneerfurnituredata.netlify.app/submit">Gallery</a>    
+    <a href=""><button onclick="setUserRole('author')" class="authbtn">Auth</button></a>
   </div>
 
   <!-- Time Display -->
@@ -187,44 +334,7 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    /* ---------- Day/Night Toggle ---------- */
-    // Check if "isNightMode" already exists in localStorage
-let storedMode = localStorage.getItem("isNightMode");
-let isNightMode;
-if (storedMode === null) {
-  // Agar localStorage mein value nahin mili, toh current time ke hisaab se set karein
-  const hour = new Date().getHours();
-  isNightMode = (hour >= 18 || hour < 6); // Night mode between 6PM and 6AM
-  localStorage.setItem("isNightMode", isNightMode);
-} else {
-  isNightMode = storedMode === "true";
-}
-
-const bodyEl = document.body;
-const dayNightToggle = document.getElementById("dayNightToggle");
-
-// Set initial mode based on isNightMode value
-if (isNightMode) {
-  bodyEl.classList.add("night-mode");
-  dayNightToggle.textContent = "Day Mode";
-} else {
-  bodyEl.classList.add("day-mode");
-  dayNightToggle.textContent = "Night Mode";
-}
-
-dayNightToggle.addEventListener("click", () => {
-  if (isNightMode) {
-    bodyEl.classList.remove("night-mode");
-    bodyEl.classList.add("day-mode");
-    dayNightToggle.textContent = "Night Mode";
-  } else {
-    bodyEl.classList.remove("day-mode");
-    bodyEl.classList.add("night-mode");
-    dayNightToggle.textContent = "Day Mode";
-  }
-  isNightMode = !isNightMode;
-  localStorage.setItem("isNightMode", isNightMode);
-});
+  
 
     /* ---------- User Role Popup ---------- */
     window.addEventListener("load", () => {
@@ -240,7 +350,7 @@ dayNightToggle.addEventListener("click", () => {
         disableButtons();
       } else if (role === "author") {
         let id = prompt("Enter ID (Default: Admin):", "Admin");
-        let pass = prompt("Enter Password (❌❌❌):", "****");
+        let pass = prompt("Enter Password (❌❌❌):", "");
         if (id === "Admin" && pass === "1234") {
           userRole = "author";
           localStorage.setItem("role", "author");
@@ -412,6 +522,20 @@ function moveOrderToHistory(billNumber, order) {
 
     // Load orders after a short delay so that popup role selection is processed
     setTimeout(loadOrders, 500);
+  </script>
+  <script>
+      window.onload = function() {
+    // Get all navbar links
+    var navLinks = document.querySelectorAll('.navbar a');
+
+    // Loop through all links
+    navLinks.forEach(function(link) {
+        // If the current page's URL matches the link's href
+        if (link.href === window.location.href) {
+            link.classList.add('active'); // Add the 'active' class
+        }
+    });
+};
   </script>
 </body>
 </html>
