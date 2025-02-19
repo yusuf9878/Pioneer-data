@@ -288,7 +288,7 @@ h2{
   <div class="navbar">
     <a href="https://pioneerfurnituredata.netlify.app/">Home</a>
     <a href="https://pioneerfurnituredata.netlify.app/history.html">History</a>
-    <a href="https://pioneerfurnituredata.netlify.app/coming.html">Gallery</a>    
+    <a href="https://pioneerfurnituredata.netlify.app/submit">Gallery</a>    
     <a href=""><button onclick="setUserRole('author')" class="authbtn">Auth</button></a>
   </div>
 
@@ -335,53 +335,58 @@ h2{
     updateClock();
 
   
-
     /* ---------- User Role Popup ---------- */
-    window.addEventListener("load", () => {
-      // Show popup on load
-      document.getElementById("userPopup").style.display = "flex";
-    });
+window.addEventListener("load", () => {
+    let lastPopupTime = localStorage.getItem("lastPopupTime");
+    let currentTime = new Date().getTime();
 
-    function setUserRole(role) {
-      if (role === "guest") {
+    // Agar lastPopupTime null hai ya 1 minute (60000ms) se jyada ho gaya hai tabhi popup dikhao
+    if (!lastPopupTime || currentTime - lastPopupTime > 60000) {
+        document.getElementById("userPopup").style.display = "flex";
+        localStorage.setItem("lastPopupTime", currentTime); // New time store kar do
+    }
+});
+
+function setUserRole(role) {
+    if (role === "guest") {
         userRole = "guest";
         localStorage.setItem("role", "guest");
         alert("You are in guest mode. You can't take any action.");
         disableButtons();
-      } else if (role === "author") {
+    } else if (role === "author") {
         let id = prompt("Enter ID (Default: Admin):", "Admin");
         let pass = prompt("Enter Password (❌❌❌):", "");
         if (id === "Admin" && pass === "1234") {
-          userRole = "author";
-          localStorage.setItem("role", "author");
-          alert("Welcome, Author! You can take action.");
-          enableButtons();
+            userRole = "author";
+            localStorage.setItem("role", "author");
+            alert("Welcome, Author! You can take action.");
+            enableButtons();
         } else {
-          alert("Invalid credentials. You will be treated as guest.");
-          userRole = "guest";
-          localStorage.setItem("role", "guest");
-          disableButtons();
+            alert("Invalid credentials. You will be treated as guest.");
+            userRole = "guest";
+            localStorage.setItem("role", "guest");
+            disableButtons();
         }
-      }
-      // Hide popup after role selection
-      document.getElementById("userPopup").style.display = "none";
     }
+    // Hide popup after role selection
+    document.getElementById("userPopup").style.display = "none";
+}
 
-    function disableButtons() {
-      const buttons = document.querySelectorAll(".btn1, .btn2");
-      buttons.forEach(button => {
+function disableButtons() {
+    const buttons = document.querySelectorAll(".btn1, .btn2");
+    buttons.forEach(button => {
         button.disabled = true;
         button.style.cursor = "not-allowed";
-      });
-    }
+    });
+}
 
-    function enableButtons() {
-      const buttons = document.querySelectorAll(".btn1, .btn2");
-      buttons.forEach(button => {
+function enableButtons() {
+    const buttons = document.querySelectorAll(".btn1, .btn2");
+    buttons.forEach(button => {
         button.disabled = false;
         button.style.cursor = "pointer";
-      });
-    }
+    });
+}
 
     /* ---------- Load Orders ---------- */
     async function loadOrders() {
