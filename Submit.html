@@ -275,7 +275,7 @@ input[type="checkbox"] {
         <br>
 
         <label for="imageUpload">Upload Image:</label>
-        <input type="file" id="imageUpload" name="imageUpload" multiple>
+        <input type="file" id="imageUpload" name="imageUpload" multiple required>
         <br><br>
 
         <label for="checkbox">Urgent</label>
@@ -302,58 +302,51 @@ input[type="checkbox"] {
     document.getElementById('dueDate').value = currentDate;
 
     // Handle form submission
-    document.getElementById('submitForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
+document.getElementById('submitForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
 
-        // Show the loading animation
-        document.getElementById('loader').style.display = "block";
-        document.querySelector('.submit-btn').disabled = true;
+    // Show the loading animation
+    document.getElementById('loader').style.display = "block";
+    document.querySelector('.submit-btn').disabled = true;
 
-        const Order = Parse.Object.extend("Orders");
-        const order = new Order();
+    const Order = Parse.Object.extend("Orders");
+    const order = new Order();
 
-        order.set("billNumber", document.getElementById('billn').value);
-        order.set("details", document.getElementById('details').value);
-        order.set("dueDate", new Date(document.getElementById('dueDate').value));
-        order.set("urgent", document.getElementById('checkbox').checked);
+    order.set("billNumber", document.getElementById('billn').value);
+    order.set("details", document.getElementById('details').value);
+    order.set("dueDate", new Date(document.getElementById('dueDate').value));
+    order.set("urgent", document.getElementById('checkbox').checked);
 
-        // Image Handling
-        let fileUpload = document.getElementById('imageUpload').files[0];
-        if (fileUpload) {
-            let parseFile = new Parse.File(fileUpload.name, fileUpload);
-            await parseFile.save();
-            order.set("image", parseFile);
-        }
+    // **Handling Multiple Images**
+    let fileInput = document.getElementById('imageUpload').files;
+    let fileArray = [];
 
-        try {
-            await order.save();
-            showAlert("Order submitted successfully!");
-        } catch (error) {
-            showAlert("There was an error submitting your order.");
-        } finally {
-            // Hide loading animation and enable submit button
-            document.getElementById('loader').style.display = "none";
-            document.querySelector('.submit-btn').disabled = false;
-        }
-    });
-
-    // Function to show custom alert
-    function showAlert(message) {
-        const alertMessage = document.getElementById("alert-message");
-        const alertModal = document.getElementById("custom-alert");
-        alertMessage.textContent = message;
-        alertModal.style.display = "flex";
+    for (let i = 0; i < fileInput.length; i++) {
+        let parseFile = new Parse.File(fileInput[i].name, fileInput[i]);
+        await parseFile.save(); // Save each file separately
+        fileArray.push(parseFile); // Push to array
     }
 
-    // Function to close the alert
-    function closeAlert() {
-        document.getElementById("custom-alert").style.display = "none";
+    if (fileArray.length > 0) {
+        order.set("images", fileArray); // Save array of images in Parse
     }
+
+    try {
+        await order.save();
+        showAlert("Order submitted successfully with multiple images!");
+    } catch (error) {
+        showAlert("There was an error submitting your order.");
+    } finally {
+        // Hide loading animation and enable submit button
+        document.getElementById('loader').style.display = "none";
+        document.querySelector('.submit-btn').disabled = false;
+    }
+});
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/parse/3.4.3/parse.min.js"></script>
 <script>
-    Parse.initialize("qy8z2SCM8r09qpMunKUCIx4I4OsGMII53b9buurv", "7qOd9JbeR2M6zXoW9qM5gDMj1o5Heam4Ul2fEp2T"); // Replace with Back4App credentials
+    Parse.initialize("ZplkGt31jAygD6lYfS0QtTWA9BVVcWYYuavsXSbd", "YEZy7qplfvNG4oAzFY6B6J7h6xuXU1mw5zdnhESE"); // Replace with Back4App credentials
     Parse.serverURL = "https://parseapi.back4app.com/";
 </script>
 <div class="footers">
