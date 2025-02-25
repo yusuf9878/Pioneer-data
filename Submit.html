@@ -22,7 +22,7 @@
         }
 
         header {
-            background-color: #1E3A8A;
+            background: linear-gradient(135deg, #292E49, #536976);
             color: white;
             padding: 15px 0;
             font-size: 24px;
@@ -46,6 +46,7 @@
             font-weight: 600;
              color: #f39c12; 
              border-bottom: 2px solid #f39c12;
+             
             
         }
 
@@ -126,12 +127,57 @@
             font-size: 14px;
             font-weight: 500;
         }
+        
+        .home{
+            color: #f39c12; 
+    border-bottom: 2px solid #f39c12;
+        }
+        
+         .navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 60px;
+    background: linear-gradient(135deg, #292E49, #536976);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+    .navbar .home{
+    color: #f39c12; 
+    border-bottom: 2px solid #f39c12;
+    }
+.navbar a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 8px 12px;
+    transition: 0.3s ease-in-out;
+    border-radius: 5px;
+}
+.navbar a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #f39c12;
+}
+
     </style>
 </head>
 <body>
 
 <header>PIONEER FURNITURE</header>
-
+<div class="navbar">
+    <a href="index.html" class="submit">
+        Home
+    </a>
+    <a href="#" class="home">
+       Submit 
+    </a>
+     <a href="#" class="Gallery">
+       Gallery 
+    </a>
+</div>
+<
 <div class="container">
     <form id="submitForm">
         <h2>Submit Order</h2>
