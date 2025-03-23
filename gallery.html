@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pioneer Gallery</title>
+  <style>
+    :root {
+  --glow-color: hsl(30, 100%, 55%);
+}
+        @import url("https://fonts.googleapis.com/css2?family=Asap&family=Roboto:ital,wght@0,500;0,900;1,500&display=swap");
+        
+      *{
+          margin:0;
+          padding:0;
+          scroll-behavior: smooth;
+          box-sizing: border-box;
+      }
+      body{
+      font-family: "Asap", sans-serif;
+      
+      text-align: center;
+  }
+  nav{
+  display: inline-flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  z-index: 1;
+  background: #222;
+  box-shadow: 0px 1px 2px rgba(0,255,255,0.5), 
+              0px 2px 4px rgba(0,255,255,0.5), 
+              0px 4px 8px rgba(0,255,255,0.5), 
+              0px 8px 16px rgba(0,255,255,0.5);
+}
+    h1 {
+      padding:10px;
+      margin:0;
+      color:#fff;
+      
+    }
+    #gallery {
+       padding:20px;
+      display: grid;
+      gap: 15px;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      object-fit: cover;
+      
+    }
+    .image-container {
+      position: relative;
+      background-color: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      cursor: pointer;
+      box-shadow: 0px 1px 2px rgba(0,255,255,0.5), 
+              0px 2px 4px rgba(0,255,255,0.5), 
+              0px 4px 8px rgba(0,255,255,0.5), 
+              0px 8px 16px rgba(0,255,255,0.5);
+    }
+    .img-wrapper {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+    }
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .watermark {
+      opacity: 0.5;
+      color:#fff;
+    }
+    p {
+      margin-top: 1px;
+    }
+
+    /* Modal Styling */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      max-width: 90%;
+      max-height: 90vh;
+      width: auto;
+      height: auto;
+      margin: auto;
+      display: block;
+      animation: blurIn 1s;
+}
+    
+  @keyframes blurIn {
+  from {
+    filter: blur(20px);
+    opacity: 0;
+  }
+  to {
+    filter: blur(0);
+    opacity: 1;
+  }
+}
+@media (min-width: 768px) {
+  .modal-content {
+    width: 98%;
+    height: 98%;
+    object-fit: contain;
+  }
+}
+
+    /* Close Button */
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 30px;
+      color: white;
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.6);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .close-btn:hover {
+      background-color: rgba(255, 0, 0, 0.8);
+    }
+    #backToTop {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #000;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 18px;
+  cursor: pointer;
+}
+#backToTop:hover {
+  background-color: #0056b3;
+}
+.ftr {
+  background-color: #000;
+  color: #fff;
+  padding: 8px;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 20px;
+  margin-top:10px;
+  margin:10px auto 20px auto;
+}
+@media (max-width: 768px) {
+  .search-container {
+    max-width: 90%;
+  }
+}
+
+#searchBar {
+  flex: 1;
+  padding: 12px 20px;
+  border: 1px solid #000;
+  border-radius: 30px 0 0 30px;
+  font-size: 16px;
+  outline: none;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+#searchBtn {
+  padding: 12px 20px;
+  border: 1px solid #000;
+  border-left: none;
+  border-radius: 0 30px 30px 0;
+  background-color: #000;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#searchBtn:hover {
+  background-color: #007bff;
+}
+
+#searchBar:focus {
+  border-color: #007bff;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+}
+.custom-alert {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #333;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  z-index: 1000;
+  text-align: center;
+}
+
+.custom-alert button {
+  margin-top: 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.custom-alert button:hover {
+  background-color: #0056b3;
+}
+.glowing-btn{
+    position: relative;
+  color: var(--glow-color);
+  cursor: pointer;
+  padding: 0.35em 1em;
+  border: 0.15em solid var(--glow-color);
+  border-radius: 0.45em;
+  background: none;
+  font-family: "Raleway", sans-serif;
+  font-size: 20px;
+   -webkit-box-shadow: inset 0px 0px 0.5em 0px var(--glow-color),
+    0px 0px 0.5em 0px var(--glow-color);
+  -moz-box-shadow: inset 0px 0px 0.5em 0px var(--glow-color),
+    0px 0px 0.5em 0px var(--glow-color);
+  box-shadow: inset 0px 0px 0.5em 0px var(--glow-color),
+    0px 0px 0.5em 0px var(--glow-color);
+  animation: border-flicker 2s linear infinite;
+}
+.glowing-txt {
+  -webkit-text-shadow: 0 0 0.125em hsl(0 0% 100% / 0.3),
+    0 0 0.45em var(--glow-color);
+  -moz-text-shadow: 0 0 0.125em hsl(0 0% 100% / 0.3),
+    0 0 0.45em var(--glow-color);
+  text-shadow: 0 0 0.125em hsl(0 0% 100% / 0.3), 0 0 0.45em var(--glow-color);
+  animation: text-flicker 3s linear infinite;
+}
+
+.faulty-letter {
+  opacity: 0.5;
+  animation: faulty-flicker 2s linear infinite;
+}
+
+.glowing-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0.7;
+  filter: blur(1em);
+  transform: translateY(120%) rotateX(95deg) scale(1, 0.35);
+  background: var(--glow-color);
+  pointer-events: none;
+}
+
+.glowing-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  z-index: -1;
+  background-color: var(--glow-color);
+  box-shadow: 0 0 2em 0.2em var(--glow-color);
+  transition: opacity 100ms linear;
+}
+
+.glowing-btn:hover {
+  color: rgba(0, 0, 0, 0.8);
+  text-shadow: none;
+  animation: none;
+}
+
+.glowing-btn:hover .glowing-txt {
+  animation: none;
+}
+
+.glowing-btn:hover .faulty-letter {
+  animation: none;
+  text-shadow: none;
+  opacity: 1;
+}
+
+.glowing-btn:hover:before {
+  filter: blur(1.5em);
+  opacity: 1;
+}
+
+.glowing-btn:hover:after {
+  opacity: 1;
+}
+
+@keyframes faulty-flicker {
+  0% {
+    opacity: 0.1;
+  }
+  2% {
+    opacity: 0.1;
+  }
+  4% {
+    opacity: 0.5;
+  }
+  19% {
+    opacity: 0.5;
+  }
+  21% {
+    opacity: 0.1;
+  }
+  23% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.5;
+  }
+  83% {
+    opacity: 0.4;
+  }
+
+  87% {
+    opacity: 1;
+  }
+}
+
+@keyframes text-flicker {
+  0% {
+    opacity: 0.1;
+  }
+
+  2% {
+    opacity: 1;
+  }
+
+  8% {
+    opacity: 0.1;
+  }
+
+  9% {
+    opacity: 1;
+  }
+
+  12% {
+    opacity: 0.1;
+  }
+  20% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0.3;
+  }
+  30% {
+    opacity: 1;
+  }
+
+  70% {
+    opacity: 0.7;
+  }
+  72% {
+    opacity: 0.2;
+  }
+
+  77% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes border-flicker {
+  0% {
+    opacity: 0.1;
+  }
+  2% {
+    opacity: 1;
+  }
+  4% {
+    opacity: 0.1;
+  }
+
+  8% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .glowing-btn{
+    font-size: 1em;
+  }
+
+  </style>
+</head>
+<body>
+    <nav>
+  <h1>Pioneer Gallery</h1>
+<button onclick="window.location.href='index.html'" class='glowing-btn'><span class='glowing-txt'>H<span class='faulty-letter'>O</span>ME</span></button>
+  </nav>
+
+<div class="search-container">
+  <input type="text" id="searchBar" placeholder="Search..." />
+  <button id="searchBtn">🔎</button>
+</div>
+  <div id="customAlert" class="custom-alert">
+  <p id="alertMessage">Image not found. Please enter a valid number.</p>
+  <button onclick="closeAlert()">OK</button>
+</div>
+  <div id="gallery"></div>
+
+  <!-- Modal with Close Button -->
+  <div id="myModal" class="modal">
+    <button class="close-btn" onclick="closeModal()">×</button>
+    <img class="modal-content" id="modalImg">
+  </div>
+<button id="backToTop">⬆️</button>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const gallery = document.getElementById("gallery");
+      const imageCount = 200;
+
+      for (let i = 1; i <= imageCount; i++) {
+        let imageContainer = document.createElement("div");
+        imageContainer.className = "image-container";
+
+        const img = document.createElement("img");
+        img.src = `img/image${i}.jpg`;
+        img.alt = `Image ${i}`;
+        img.classList.add("gallery-img");
+
+        img.onerror = function() {
+          img.src = `img/image${i}.png`;
+          img.onerror = function() {
+            img.src = `img/image${i}.jpeg`; 
+            img.onerror = function() {
+              imageContainer.remove();
+            };
+          };
+        };
+
+        const watermark = document.createElement("div");
+        watermark.className = "watermark";
+        watermark.textContent = "Pioneer Furniture";
+
+        const overlay = document.createElement("div");
+        overlay.className = "overlay";
+        overlay.appendChild(watermark);
+
+        const imgWrapper = document.createElement("div");
+        imgWrapper.className = "img-wrapper";
+        imgWrapper.appendChild(img);
+        imgWrapper.appendChild(overlay);
+
+        imageContainer.appendChild(imgWrapper);
+
+        const caption = document.createElement("p");
+        caption.textContent = `Sofa-${i}`;
+        imageContainer.appendChild(caption);
+
+        gallery.appendChild(imageContainer);
+
+        // Image container par click event
+        imageContainer.addEventListener('click', function() {
+          openModal(img.src);
+        });
+      }
+      });
+   
+
+    function openModal(src) {
+      const modal = document.getElementById("myModal");
+      const modalImg = document.getElementById("modalImg");
+      modalImg.src = src;
+      modal.style.display = "flex";
+    }
+
+    function closeModal() {
+      const modal = document.getElementById("myModal");
+      modal.style.display = "none";
+    }
+    document.getElementById("backToTop").addEventListener("click", function() {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+document.getElementById('searchBar').addEventListener('input', function(e) {
+  const searchValue = e.target.value.trim().toLowerCase();
+  const images = document.querySelectorAll('.image-container');
+
+  images.forEach(image => {
+    const caption = image.querySelector('p').textContent;
+    if (caption.includes(searchValue)) {
+      image.style.display = 'block';
+    } else {
+      image.style.display = 'none';
+    }
+  });
+});
+
+document.getElementById("searchBtn").addEventListener("click", function () {
+  const searchTerm = document.getElementById("searchBar").value.trim();
+  const images = document.querySelectorAll(".image-container img");
+
+  let found = false;
+  images.forEach((img) => {
+    if (img.dataset.number === searchTerm) {
+      img.parentElement.scrollIntoView({ behavior: "smooth" });
+      found = true;
+    }
+  });
+
+  if (!found) {
+    showAlert("Image not found. Please enter a valid number.");
+  }
+});
+
+function showAlert(message) {
+  const alertBox = document.getElementById("customAlert");
+  const alertMessage = document.getElementById("alertMessage");
+  alertMessage.textContent = message;
+  alertBox.style.display = "block";
+}
+
+function closeAlert() {
+  const alertBox = document.getElementById("customAlert");
+  alertBox.style.display = "none";
+}
+  </script>
+  <div class="ftr">
+      <p>© Create By Yusuf khan 2025-26</p>
+  </div>
+</body>
+    </html>
