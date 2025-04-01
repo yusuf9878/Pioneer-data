@@ -1,0 +1,159 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: linear-gradient(135deg, #000000, #224abe);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            color: #fff;
+        }
+        .container {
+            background: transparent;
+            max-width: 600px;
+            width:100%;
+            padding: 30px;
+            transition: transform 0.3s ease-in-out;
+        }
+        .container:hover {
+            transform: scale(1.05);
+        }
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+       
+        .profile-img img {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+        }
+        h1, h2 {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        ul {
+            list-style: none;
+        }
+        ul li {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+        ul li:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        a {
+            color: #ffdd57;
+            font-weight: bold;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        a:hover {
+            color: #ff9900;
+        }
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+            }
+        }
+     .ptag {
+     padding:15px;
+    font-size: 15px;
+    font-family: monospace;
+    border-right: 2px solid black;
+    width: fit-content;
+    }
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>About Me</h1>
+        </header>
+        <section class="profile">
+            <div class="profile-img">
+                <img src="https://iili.io/3RuHfwu.md.png" alt="Profile Image">
+            </div>
+            <h2>Yusuf <span style="color:yellow;">Khan</span></h2>
+            <p class="ptag" id="text"></p>
+        </section>
+        <section class="details">
+            <h3>Skills & Interests</h3>
+            <ul>
+                <li>Web Development</li>
+                <li>Reverse Engineering</li>
+                <li>UI/UX Design</li>
+                <li>Photography & Blogging</li>
+                <li>HTML,Css & Js</li>
+                <li> Termux & GitHub</li>
+                <li><a href="project.html">Click To View Project</a></li>
+            </ul>
+        </section>
+        <section class="contact">
+            <h3>Contact Me</h3>
+            <p>Email: <a href="mailto:akg14320@gmail.com">akg14320@gmail.com</a></p>
+            <p>Socials: <a href="https://www.instagram.com/you_know_pathan_?igsh=MWNsZTI3d3dscTJhbQ==" target="_blank">Instagram</a> | <a href="#">LinkedIn</a></p>
+        </section>
+    </div>
+    <script>
+        const textElement = document.getElementById("text");
+const text = "   Hi, I am Yusuf, a passionate web developer and technology enthusiast. I love creating websites, designing user-friendly interfaces, and solving real-world problems with code."; 
+let index = 0;
+
+function typeWriter() {
+    if (index < text.length) {
+        textElement.innerHTML += text[index];
+        textElement.style.color = getRandomColor(); // Color Change
+        index++;
+        setTimeout(typeWriter, 40);
+    } else {
+        setTimeout(resetText, 90000);
+    }
+}
+
+function resetText() {
+    textElement.innerHTML = "";
+    index = 0;
+    typeWriter();
+}
+
+function getRandomColor() {
+    return `hsl(${Math.random() * 360}, 100%, 50%,30%, 10% )`; 
+}
+
+typeWriter();
+
+    </script>
+    <script>
+        document.addEventListener('copy', function (event) {
+    event.preventDefault();  
+    if (event.clipboardData) {
+        event.clipboardData.setData('text/plain', 'Fuck You! Don\'t Copy My Code.');
+    }
+});
+    </script>
+</body>
+</html>
