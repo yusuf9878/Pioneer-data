@@ -3,20 +3,22 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="blue">
+
   <title>Pioneer Furniture Order's</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/parse/3.4.3/parse.min.js"></script>
+
   <style>
 
   * { 
     padding: 0; 
     margin: 0;
      }
-     
-    body { font-family: 'Arial', sans-serif;
-            background-color:#ffffff ;
+
+    body { 
+        
             color: #000;
+            font-family: Arial, Helvetica, sans-serif;
             }
    /* navbar css start */
    
@@ -59,8 +61,8 @@
     font-weight:bold;
 }
      h1{
-           background-color: #333;
-            color: #fff;
+        background: linear-gradient(95deg, #333d74, #2e393f);
+            color: #ffffff;
             padding: 10px;
             margin-bottom: 20px;
             font-size: 24px;
@@ -108,24 +110,23 @@
     
     /* Cart Items */
     
-    .cart-item {
-      border: 1px solid black;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);   
-      padding: 15px;
-      margin-bottom: 20px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-      
+.cart-item {
+  border: 1px solid black;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);   
+  padding: 15px;
+  margin-bottom: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-    .cart-item:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    }
+
+.cart-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
     
     .cart-item img {
       max-width: 100%; 
-      width: 100%; 
+      width: 90%; 
       height: auto; 
       border-radius: 4px;
       margin-top: 10px;
@@ -135,6 +136,7 @@
     .cart-item p {
                  margin: 8px 0; 
                  font-size: 16px; 
+                 font-weight: 700;
      }
      
      /* cart end */
@@ -149,18 +151,18 @@
     /* Buttons */
     
  .btn1, .btn2 {
+
     height: 50px;
     width: 48%;
     border: none;
-    border-radius: 25px;
-    color: white;
-    font-size: 19px;
+    border-radius: 5px;
+    color: rgb(0, 0, 0);
+    font-size: 15px;
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s ease-in-out;
     text-align: center;
     text-transform: uppercase;
-    background: linear-gradient(135deg, #007bff, #0056b3);
     box-shadow: 0px 4px 10px rgba(0, 0, 255, 0.3);
 }
 .btn1:hover, .btn2:hover {
@@ -170,12 +172,12 @@
     
     .btn1 { 
     background-color: #007bff; 
-    font-size: 19px; 
+    font-size: 15px; 
     font-family: Arial, Helvetica, sans-serif;
     }
     
     .btn2 { 
-    font-size: 19px; 
+    font-size: 15px; 
     background-color: #28a745;
     font-family: Arial, Helvetica, sans-serif;
      }
@@ -229,7 +231,6 @@
     
     .popup-content {
       border:1px solid #fff;
-      backdrop-filter:blur(20px);
       box-shadow: 0px 0px 15px 5px rgba(255, 255, 255, 55);
       padding: 20px; 
       border-radius: 8px; 
@@ -306,7 +307,7 @@ h2{
     bottom: 0;
     left: 0;
     width: 100%;
-    background: linear-gradient(135deg, #292E49, #536976);
+    background: linear-gradient(135deg, #e5e9ff, #536976);
     color: white;
     text-align: center;
     padding: 3px;
@@ -315,8 +316,7 @@ h2{
     text-shadow: 2px 2px 5px rgba(255, 0, 0, 0.5);
 }
 .footers p{
-    font-family:Cursive;
-    text-shadow:2px 2px 5px red;
+    text-shadow:2px 2px 5px rgb(255, 255, 255);
 }
 .skeleton-card {
     width: 100%;
@@ -522,10 +522,10 @@ async function loadOrders() {
                     <p>${order.image}</p> <!-- ✅ Multiple images properly show hongi -->
                     <hr>
                     <button class="btn1" id="frame-${order.objectId}" onclick="updateStatus('${order.objectId}', 'FRAME READY')" ${order.status !== 'PENDING' ? 'style="display:none;"' : ''}>
-                        Frame Ready
+                        click for Frame Ready
                     </button>
                     <button class="btn2" id="sofa-${order.objectId}" onclick="updateStatus('${order.objectId}', 'SOFA READY ✔️')" ${order.status !== 'FRAME READY' ? 'style="display:none;"' : ''}>
-                        Sofa Ready
+                        click for Sofa Ready
                     </button>
                 </div>
             `;
@@ -750,7 +750,7 @@ setTimeout(() => {
 
   <div class="footers">
     <p>
-      Created By <a href="https://pioneerfurnituredata.netlify.app/about.html">Yusuf Khan</a>
+      Created By <a href="https://pioneerfurnituredata.netlify.app/about.html"><b>YUSUF KHAN</b></a>
     </p>
   </div>
 </body>
