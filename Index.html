@@ -3,337 +3,319 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>Pioneer Furniture Order's</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/parse/3.4.3/parse.min.js"></script>
+<style>
 
-  <style>
+@import url('https://fonts.googleapis.com/css2?family=Bungee+Spice&family=Kanit:wght@400;600;700&display=swap');
 
-  * { 
-    padding: 0; 
-    margin: 0;
-     }
-
-    body { 
-        
-            color: #000;
-            font-family: Arial, Helvetica, sans-serif;
-            }
-   /* navbar css start */
-   
- .navbar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 60px;
-    background: linear-gradient(135deg, #292E49, #536976);
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-    .navbar .home{
-    color: #f39c12; 
-    border-bottom: 2px solid #f39c12;
-    }
+
+body {
+  font-family: 'Kanit', sans-serif;
+  background-color: #f5f7fa;
+  color: #333;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+  background: linear-gradient(135deg, #1f1c2c, #928dab);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
 .navbar a {
-    color: #fff;
-    text-decoration: none;
-    margin: 0 15px;
-    font-size: 18px;
-    font-weight: bold;
-    padding: 8px 12px;
-    transition: 0.3s ease-in-out;
-    border-radius: 5px;
-}
-.navbar a:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    color: #f39c12;
+  color: #ffffff;
+  text-decoration: none;
+  margin: 0 20px;
+  font-weight: 600;
+  font-size: 17px;
+  padding: 10px 15px;
+  transition: all 0.3s ease;
+  border-radius: 6px;
 }
 
-  .authbtn {
-    background-color: transparent;
-    border: none;
-    font-size: 18px;
-    color: #fff;
-    margin: 0 10px;
-    transition: 0.2s;
-    cursor: pointer;
-    font-weight:bold;
+.navbar a:hover,
+.navbar a.active {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #f1c40f;
 }
-     h1{
-        background: linear-gradient(95deg, #333d74, #2e393f);
-            color: #ffffff;
-            padding: 10px;
-            margin-bottom: 20px;
-            font-size: 24px;
-            margin: 0;
-            text-align:center;
-  }
-  /* navbar end*/
-  
-  /* time Start */
-    .time {
-      display: flex;
-      justify-content: center;
-      text-align: center;
-      font-size: 20px;
-      margin-top: 10px; 
-      font-weight: bold; 
-      
-    }
-   /* time  End*/
-    .toggle-btn {
-      padding: 10px 20px;
-      background-color: #333; 
-      color: #fff;
-      border: none; 
-      border-radius: 5px; 
-      cursor: pointer; 
-      font-size: 18px; 
-      font-weight: bold;
-      transition: background-color 0.3s;
-    }
-    
-    .toggle-btn:hover {
-     background-color: #444;
-      }
-    
-   /* cart design*/
-   
-    #cartContainer { 
-    margin: 20px auto; 
-    padding: 10px; 
-    max-width: 800px; 
-    }
-    
-    /* cart end*/
-    
-    /* Cart Items */
-    
-.cart-item {
-  border: 1px solid black;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);   
+
+/* Auth Button */
+.authbtn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
+  margin-left: 15px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.authbtn:hover {
+  color: #f1c40f;
+}
+
+/* Heading */
+h1 {
+  background: linear-gradient(90deg, #485563, #29323c);
+  color: white;
   padding: 15px;
-  margin-bottom: 20px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  font-size: 26px;
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* Time Display */
+.time {
+  display: flex;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 15px 0;
+}
+
+/* Toggle Button */
+.toggle-btn {
+  background-color: #2c3e50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.toggle-btn:hover {
+  background-color: #34495e;
+}
+
+/* Cart Container */
+#cartContainer {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 15px;
+}
+
+/* Cart Item */
+.cart-item {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
 }
 
 .cart-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-}
-    
-    .cart-item img {
-      max-width: 100%; 
-      width: 90%; 
-      height: auto; 
-      border-radius: 4px;
-      margin-top: 10px;
-      border: 1px solid blue;
-    }
-    /* cart p start */
-    .cart-item p {
-                 margin: 8px 0; 
-                 font-size: 16px; 
-                 font-weight: 700;
-     }
-     
-     /* cart end */
-     
-    .cart-item hr {
-     margin: 15px 0; 
-     border: none; 
-     border-top: 1px solid #eee;
-      }
-      
-  
-    /* Buttons */
-    
- .btn1, .btn2 {
-
-    height: 50px;
-    width: 48%;
-    border: none;
-    border-radius: 5px;
-    color: rgb(0, 0, 0);
-    font-size: 15px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s ease-in-out;
-    text-align: center;
-    text-transform: uppercase;
-    box-shadow: 0px 4px 10px rgba(0, 0, 255, 0.3);
-}
-.btn1:hover, .btn2:hover {
-    background: linear-gradient(135deg, #0056b3, #003d82);
-    box-shadow: 0px 0px 15px rgba(0, 0, 255, 0.7);
-}
-    
-    .btn1 { 
-    background-color: #007bff; 
-    font-size: 15px; 
-    font-family: Arial, Helvetica, sans-serif;
-    }
-    
-    .btn2 { 
-    font-size: 15px; 
-    background-color: #28a745;
-    font-family: Arial, Helvetica, sans-serif;
-     }
-    
-    /* Status Labels */
-    
-    .status { 
-           font-weight: bold; 
-           padding: 5px 10px; 
-           border-radius: 5px; 
-    }
-    /* status  css start*/
-    
-    .status-pending { 
-              background-color: orange;
-              color: white;
-               }
-               
-    .status-frame-ready { 
-             background-color: blue; 
-             color: white; 
-             
-             }
-             
-    .status-sofa-ready { 
-              background-color: green; 
-              color: white;
-              
-     }
-     /* button  end*/
-     
-    /* Highlight for orders ready for history */
-    .highlight {
-      border: 2px solid #ff0;
-      box-shadow: 0 0 15px rgba(255,255,0,0.8);
-    }
-    
-    /* Popup for User Role */
-    .popup {
-      display: flex; 
-      justify-content: center; 
-      align-items: center;
-      position: fixed; 
-      top: 0; 
-      left: 0; 
-      right: 0; 
-      bottom: 0;
-      background: rgba(0,0,0,0.5); 
-      z-index: 1000;
-    }
-    
-    .popup-content {
-      border:1px solid #fff;
-      box-shadow: 0px 0px 15px 5px rgba(255, 255, 255, 55);
-      padding: 20px; 
-      border-radius: 8px; 
-      text-align: center;
-    }
-    
-    .popup button {
-      padding: 10px 20px;
-      margin: 10px; 
-      border-radius: 5px;
-      font-weight: bold; 
-      border: none; 
-      font-size: 16px; 
-      cursor: pointer;
-      transition: 
-      box-shadow 0.3s ease-in-out;
-    }
-    .popup button:hover {
-      box-shadow: 0 0 15px rgba(4,170,109,1);
-      background-color:blue;
-    }
-    
-    /* order button start*/
-    
-    .add-order-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: linear-gradient(135deg, #ff7e5f, #feb47b);
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    border-radius: 50px;
-    font-size: 16px;
-    cursor: pointer;
-    font-weight: bold;
-    box-shadow: 0 4px 15px rgba(255, 126, 95, 0.5);
-    transition: all 0.3s ease-in-out;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
-.addbtn a{
-    text-shadow: 0 0 5px white, 0 0 10px white;
-    text-decoration:none;
-     font-size: 15px;
+.cart-item img {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  border-radius: 10px;
+  border: 2px solid #2980b9;
+  margin-top: 10px;
 }
 
+.cart-item p {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 10px 0;
+}
+
+.cart-item hr {
+  border-top: 1px solid #ddd;
+  margin: 15px 0;
+}
+
+/* Buttons */
+.btn1, .btn2 {
+  width: 48%;
+  height: 48px;
+  border-radius: 6px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.btn1 {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn2 {
+  background-color: #27ae60;
+  color: white;
+}
+
+.btn1:hover {
+  background: #2980b9;
+}
+
+.btn2:hover {
+  background: #1e8449;
+}
+
+/* Status Labels */
+.status {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 14px;
+  color: white;
+  text-align: center;
+}
+
+.status-pending {
+  background-color: #f39c12;
+}
+
+.status-frame-ready {
+  background-color: #2980b9;
+}
+
+.status-sofa-ready {
+  background-color: #27ae60;
+}
+
+/* Highlighted Orders */
+.highlight {
+  border: 2px solid #f1c40f;
+  box-shadow: 0 0 20px rgba(241, 196, 15, 0.7);
+}
+
+/* Add Order Button */
+.add-order-btn {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  padding: 14px 28px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 16px;
+  background: linear-gradient(135deg, #ff6a00, #ee0979);
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(255, 106, 0, 0.4);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
 .add-order-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(255, 126, 95, 0.8), 0 0 40px rgba(255, 126, 95, 0.5);
-    }
-    
-    
-    
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(255, 106, 0, 0.8);
+}
 
-/* order button end*/
+.addbtn a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
+  text-shadow: 0 0 5px white;
+}
 
-.navbar a.active {
-    color: #f39c12; 
-    border-bottom: 2px solid #f39c12;
+/* Popup */
+.popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 }
-.popup-content h2{
-    color:#fff;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); 
+
+.popup-content {
+  background-color: #2c3e50;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  color: white;
+  text-align: center;
 }
-h2{
-    text-align:center;
+
+.popup-content h2 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
 }
-  .footers {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: linear-gradient(135deg, #e5e9ff, #536976);
-    color: white;
-    text-align: center;
-    padding: 3px;
-    font-size: 10px;
-    font-family: 'Cursive', sans-serif;
-    text-shadow: 2px 2px 5px rgba(255, 0, 0, 0.5);
+
+.popup button {
+  background-color: #1abc9c;
+  color: white;
+  font-weight: bold;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 10px;
+  transition: all 0.3s ease;
 }
-.footers p{
-    text-shadow:2px 2px 5px rgb(255, 255, 255);
+
+.popup button:hover {
+  background-color: #16a085;
+  box-shadow: 0 0 10px rgba(26, 188, 156, 0.7);
 }
+
+/* Footer */
+.footers {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(to right, #8e9eab, #eef2f3);
+  text-align: center;
+  padding: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2c3e50;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Skeleton Loading */
 .skeleton-card {
-    width: 100%;
-    height: 140px;
-    border-radius: 12px;
-    background: linear-gradient(90deg, #e0e0e0 25%, #f7f7f7 50%, #e0e0e0 75%);
-    background-size: 200% 100%;
-    animation: skeleton-loading 1.5s infinite;
-    margin: 10px 0;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  height: 140px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f7f7f7 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  margin: 10px 0;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 @keyframes skeleton-loading {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
-  </style>
+
+
+</style>
+ 
 </head>
 <body>
      <!-- Header Section -->
