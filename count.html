@@ -2,203 +2,195 @@
 <html lang="hi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Countdown Page</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>10 Sec Countdown with Crackers</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(145deg, #0d1b2a, #1b263b);
+      font-family: sans-serif;
+      background: #0f2027;
       color: #fff;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
-      overflow: hidden;
-      position: relative;
-      animation: backgroundGlide 10s infinite alternate ease-in-out;
-    }
-
-    @keyframes backgroundGlide {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 100% 50%; }
-    }
-
-    .container {
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(12px);
-      border-radius: 24px;
-      padding: 48px;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+      flex-direction: column;
       text-align: center;
-      max-width: 700px;
-      width: 90%;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      animation: slideIn 1.2s ease-out;
-    }
-
-    @keyframes slideIn {
-      0% { opacity: 0; transform: translateY(-30px) scale(0.95); }
-      100% { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    h1 {
-      font-size: 2.25rem;
-      font-weight: 700;
-      margin-bottom: 24px;
-      color: #f0e68c;
-      letter-spacing: 0.02em;
-      animation: textPulse 3s infinite ease-in-out;
-    }
-
-    @keyframes textPulse {
-      0%, 100% { text-shadow: 0 0 4px red }
-      50% { text-shadow: 0 0 16px #ffd700; }
-    }
-
-    #countdown {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin: 32px 0;
-    }
-
-    .time-box {
-      background: rgba(255, 255, 255, 0.12);
-      border-radius: 12px;
       padding: 20px;
-      min-width: 90px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      animation: bounceIn 1s ease forwards;
     }
-
-    .time-box span {
-      display: block;
-      font-size: 2.75rem;
-      font-weight: 700;
+    canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2rem;
+    }
+    #countdown {
+      font-size: 4rem;
+      margin-bottom: 20px;
       color: #00ff99;
-      letter-spacing: 0.05em;
+      animation: flicker 1s infinite alternate;
     }
-
-    .time-box label {
-      font-size: 0.9rem;
-      color: #b0c4de;
-      text-transform: uppercase;
-      margin-top: 8px;
-    }
-
     .message {
-      margin-top: 24px;
-      font-size: 1.15rem;
-      font-weight: 400;
-      color: #ffd700;
-      animation: pulse 2.5s infinite ease-in-out;
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+      color: #dbbc0b;
+      animation: glow 2s ease-in-out infinite alternate;
     }
-
-    .reg {
+    .progress-bar {
+      width: 80%;
+      height: 20px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 8px rgba(0,0,0,0.5);
+      margin-bottom: 30px;
+    }
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(180deg, #000000, #c5d308, #e4e3e1);
+      border-radius: 12px;
+      transition: width 0.1s linear;
+    }
+    footer {
       position: absolute;
       bottom: 20px;
-      right: 32px;
-      font-size: 1rem;
-      color: rgba(255, 255, 255, 0.7);
-      animation: fadeIn 2s ease-out 1s forwards;
-      opacity: 0;
+      color: rgba(255,255,255,0.6);
+      font-size: 0.95rem;
     }
-
-    @keyframes bounceIn {
-      0% { transform: scale(0.8); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
+    @keyframes flicker {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.05) rotate(1deg);}
+      100% { opacity: 1; transform: scale(1); }
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
-    }
-
-    @media (max-width: 600px) {
-      h1 { font-size: 1.75rem; }
-      .container { padding: 24px; }
-      .time-box { min-width: 70px; padding: 16px; }
-      .time-box span { font-size: 2rem; }
-      .time-box label { font-size: 0.8rem; }
-      .message { font-size: 1rem; }
-      .reg { font-size: 0.9rem; right: 24px; bottom: 16px; }
+    @keyframes glow {
+      0% {
+        text-shadow: 0 0 5px #1e3305, 0 0 10px #3b3513, 0 0 20px #ff8c00;
+      }
+      100% {
+        text-shadow: 0 0 10px #8307e9, 0 0 20px #ff8c00, 0 0 30px #ff4500;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container" id="main-container">
-    <h1>Aap 25,000 Request Paar Kar Chuke Hain!<br>Kripya 22 Tareek Tak Intezaar Karein.</h1>
-    <div id="countdown">
-      <div class="time-box"><span id="days">0</span><label>Din</label></div>
-      <div class="time-box"><span id="hours">0</span><label>Ghante</label></div>
-      <div class="time-box"><span id="minutes">0</span><label>Minute</label></div>
-      <div class="time-box"><span id="seconds">0</span><label>Second</label></div>
-      <div class="time-box"><span id="milliseconds">0</span><label>Milli</label></div>
-    </div>
-    <div class="message">Countdown Pura Hone Par Main Page Par Redirect Kar Diya Jayega</div>
+
+  <canvas id="canvas"></canvas>
+
+  <h1>welcome back</h1>
+  <div id="countdown">20</div>
+
+  <div class="message">Aapka data safe hai. Time reset ho gaya hai.<br> Aapko 10 second me redirect kiya jayega.</div>
+
+  <div class="progress-bar">
+    <div class="progress" id="progress"></div>
   </div>
-  <p class="reg">Reg. Yusuf Khan</p>
+
+  <footer>Reg. Yusuf Khan</footer>
 
   <script>
-    const targetDate = new Date("2025-04-22T00:00:00").getTime();
+ 
+let timeLeft = 20;
+let progressValue = 0;
+const countdownEl = document.getElementById('countdown');
+const progressEl = document.getElementById('progress');
 
-    const countdownFunction = setInterval(() => {
-      const now = new Date().getTime();
-      const difference = targetDate - now;
+let fireworkInterval;
 
-      if (difference < 0) {
-        clearInterval(countdownFunction);
-        const container = document.getElementById("main-container");
-        container.innerHTML = `
-          <h1 style="animation: zoomIn 1s ease-out;">Samay Samapt Ho Gaya!</h1>
-          <div class="message" style="animation: fadeOut 2s ease-in-out;">Main Page Par Redirect Ho Raha Hai...</div>
-        `;
-        setTimeout(() => {
-          window.location.href = "main.html";
-        }, 2500);
-        return;
-      }
+const countdownInterval = setInterval(() => {
+  timeLeft--;
+  countdownEl.textContent = timeLeft;
 
-      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-      const milliseconds = Math.floor(difference % 1000);
+  // 💥 start fireworks when 10 seconds left
+  if (timeLeft === 10) {
+    fireworkInterval = setInterval(spawnFirework, 600);
+  }
 
-      document.getElementById("days").textContent = days;
-      document.getElementById("hours").textContent = hours;
-      document.getElementById("minutes").textContent = minutes;
-      document.getElementById("seconds").textContent = seconds;
-      document.getElementById("milliseconds").textContent = milliseconds.toString().padStart(3, '0');
-    }, 1);
+  if (timeLeft <= 0) {
+    clearInterval(countdownInterval);
+    clearInterval(fireworkInterval);
+    window.location.href = "main.html";
+  }
+}, 1000);
 
-    // Extra animations
-    const style = document.createElement('style');
-    style.innerHTML = `
-      @keyframes fadeOut {
-        0% { opacity: 1; }
-        100% { opacity: 0; transform: scale(0.95); }
-      }
-      @keyframes zoomIn {
-        0% { opacity: 0; transform: scale(0.5); }
-        100% { opacity: 1; transform: scale(1); }
-      }
-    `;
-    document.head.appendChild(style);
+const progressInterval = setInterval(() => {
+  progressValue += 0.5; // adjust speed for 20s
+  progressEl.style.width = progressValue + "%";
+  if (progressValue >= 100) {
+    clearInterval(progressInterval);
+  }
+}, 100);
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const particles = [];
+
+function Particle(x, y, color) {
+  this.x = x;
+  this.y = y;
+  this.radius = Math.random() * 1 + 1;
+  this.color = color;
+  this.speedX = (Math.random() - 0.5) * 5;
+  this.speedY = (Math.random() - 0.5) * 5;
+  this.alpha = 1;
+}
+
+Particle.prototype.update = function() {
+  this.x += this.speedX;
+  this.y += this.speedY;
+  this.alpha -= 0.01;
+}
+
+Particle.prototype.draw = function() {
+  ctx.save();
+  ctx.globalAlpha = this.alpha;
+  ctx.beginPath();
+  ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+  ctx.fillStyle = this.color;
+  ctx.fill();
+  ctx.restore();
+}
+
+function animate() {
+  ctx.fillStyle = 'rgba(0,0,0,0.1)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  for (let i = particles.length - 1; i >= 0; i--) {
+    particles[i].update();
+    particles[i].draw();
+    if (particles[i].alpha <= 0) {
+      particles.splice(i, 1);
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+
+function spawnFirework() {
+  const colors = ['#ff0', '#f0f', '#0ff', '#ff5050', '#00ff99', '#ffd700'];
+  const x = Math.random() * canvas.width;
+  const y = Math.random() * canvas.height / 2;
+  for (let i = 0; i < 30; i++) {
+    particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)]));
+  }
+}
+
+animate();
+
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+
   </script>
+
 </body>
 </html>
