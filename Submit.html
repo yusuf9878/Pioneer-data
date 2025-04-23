@@ -496,43 +496,68 @@
 
 <script>
     document.getElementById('dueDate').value = new Date().toISOString().split('T')[0];
+document.getElementById('submitForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    document.getElementById('loader').style.display = "block";
+    document.querySelector('.submit-btn').disabled = true;
 
-    document.getElementById('submitForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        document.getElementById('loader').style.display = "block";
-        document.querySelector('.submit-btn').disabled = true;
+    let billValue = document.getElementById('billn').value.trim();
+    const details = document.getElementById('details').value;
+    const dueDate = new Date(document.getElementById('dueDate').value);
+    const urgent = document.getElementById('checkbox').checked;
 
-        const Order = Parse.Object.extend("Orders");
-        const order = new Order();
-
-        order.set("billNumber", document.getElementById('billn').value);
-        order.set("details", document.getElementById('details').value);
-        order.set("dueDate", new Date(document.getElementById('dueDate').value));
-        order.set("urgent", document.getElementById('checkbox').checked);
-
-        let fileInput = document.getElementById('imageUpload').files;
-        let fileArray = [];
-
-        for (let i = 0; i < fileInput.length; i++) {
-            let parseFile = new Parse.File(fileInput[i].name, fileInput[i]);
-            await parseFile.save();
-            fileArray.push(parseFile);
-        }
-
-        if (fileArray.length > 0) {
-            order.set("images", fileArray);
-        }
+    // Check if 'shop' or 'SHOP' is in the bill value
+    if (billValue.toLowerCase().includes("shop")) {
+        const Orders = Parse.Object.extend("Orders");
+        const query = new Parse.Query(Orders);
+        query.startsWith("billNumber", "shop");
 
         try {
-            await order.save();
-            alert("Order submitted successfully!");
+            const results = await query.find();
+            const nextShopNumber = results.length + 1;
+            billValue = `shop ${nextShopNumber}`;
         } catch (error) {
-            alert("Error submitting order.");
-        } finally {
+            console.error("Error fetching shop orders:", error);
+            alert("Error checking shop number. Try again.");
             document.getElementById('loader').style.display = "none";
             document.querySelector('.submit-btn').disabled = false;
+            return;
         }
-    });
+    }
+
+    const Order = Parse.Object.extend("Orders");
+    const order = new Order();
+    order.set("billNumber", billValue);
+    order.set("details", details);
+    order.set("dueDate", dueDate);
+    order.set("urgent", urgent);
+
+    let fileInput = document.getElementById('imageUpload').files;
+    let fileArray = [];
+
+    for (let i = 0; i < fileInput.length; i++) {
+        let parseFile = new Parse.File(fileInput[i].name, fileInput[i]);
+        await parseFile.save();
+        fileArray.push(parseFile);
+    }
+
+    if (fileArray.length > 0) {
+        order.set("images", fileArray);
+    }
+
+    try {
+        await order.save();
+        alert("Order submitted successfully!");
+        document.getElementById("submitForm").reset();
+        document.getElementById('dueDate').value = new Date().toISOString().split('T')[0];
+    } catch (error) {
+        alert("Error submitting order.");
+    } finally {
+        document.getElementById('loader').style.display = "none";
+        document.querySelector('.submit-btn').disabled = false;
+    }
+});
+
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/parse/3.4.3/parse.min.js"></script>
