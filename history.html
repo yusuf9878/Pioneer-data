@@ -172,8 +172,9 @@
 
     .upload-container img {
       width: 100%;
-      max-width: 120px;
-      height: 120px;
+      max-width: 200px;
+      height: auto;
+      margin:0 auto;
       object-fit: cover;
       border-radius: 8px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -199,10 +200,12 @@
     }
 
     .modal img {
-      max-width: 90%;
-      max-height: 90%;
+      max-width: 100%;
+      max-height: 100%;
       border-radius: 10px;
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+      margin:0 auto;
+      height:auto;
     }
 
     .close {
@@ -379,7 +382,78 @@ Parse.initialize("ZplkGt31jAygD6lYfS0QtTWA9BVVcWYYuavsXSbd", "YEZy7qplfvNG4oAzFY
       console.error("Error hiding order:", error);
     }
   }
+  async function handleFileUpload(input, billNumber) {
+  const file = input.files[0];
+  if (file) {
+    console.log('Selected file:', file.name);
 
+    // Uploading spinner + text dikhana
+    const uploadContainer = input.parentElement;
+
+    const loadingDiv = document.createElement('div');
+    loadingDiv.style.display = 'flex';
+    loadingDiv.style.alignItems = 'center';
+    loadingDiv.style.gap = '10px';
+    loadingDiv.style.marginTop = '10px';
+    loadingDiv.id = `uploadingDiv_${billNumber}`;
+
+    const spinner = document.createElement('div');
+    spinner.style.width = '20px';
+    spinner.style.height = '20px';
+    spinner.style.border = '3px solid #f3f3f3';
+    spinner.style.borderTop = '3px solid #3498db';
+    spinner.style.borderRadius = '50%';
+    spinner.style.animation = 'spin 1s linear infinite';
+
+    const uploadingText = document.createElement('p');
+    uploadingText.innerText = 'Image Submitting...';
+    uploadingText.style.color = 'blue';
+    uploadingText.style.fontWeight = 'bold';
+
+    loadingDiv.appendChild(spinner);
+    loadingDiv.appendChild(uploadingText);
+    uploadContainer.appendChild(loadingDiv);
+
+    // Add spinner animation via CSS
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    const parseFile = new Parse.File(file.name, file);
+
+    try {
+      await parseFile.save();
+      console.log('Image uploaded to Parse:', parseFile.url());
+
+      const HistoryOrder = Parse.Object.extend("HistoryOrders");
+      const query = new Parse.Query(HistoryOrder);
+      query.equalTo("billNumber", billNumber);
+      const order = await query.first();
+
+      if (order) {
+        order.set("imageUrl", parseFile.url());
+        await order.save();
+        console.log('Order updated with image URL');
+
+        // UI ko refresh karo
+        await loadAllOrders();
+      }
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    } finally {
+      // Jab kaam complete ho jaye, spinner hata do
+      const existingUploadingDiv = document.getElementById(`uploadingDiv_${billNumber}`);
+      if (existingUploadingDiv) {
+        existingUploadingDiv.remove();
+      }
+    }
+  }
+}
   function filterHistory() {
     const input = document.getElementById("search").value.toLowerCase();
     const historyItems = document.querySelectorAll(".history-item");
@@ -441,6 +515,60 @@ Parse.initialize("ZplkGt31jAygD6lYfS0QtTWA9BVVcWYYuavsXSbd", "YEZy7qplfvNG4oAzFY
     loadAllOrders();
   };
   
+  function openModal(imageUrl) {
+  if (!imageUrl) return;
+
+  // Modal background
+  const modal = document.createElement('div');
+  modal.style.position = 'fixed';
+  modal.style.top = '0';
+  modal.style.left = '0';
+  modal.style.width = '100%';
+  modal.style.height = '100%';
+  modal.style.backgroundColor = 'rgba(0,0,0,0.8)';
+  modal.style.display = 'flex';
+  modal.style.alignItems = 'center';
+  modal.style.justifyContent = 'center';
+  modal.style.zIndex = '1000';
+  modal.style.flexDirection = 'column';
+
+  // Close Button
+  const closeButton = document.createElement('button');
+  closeButton.innerText = '×'; // Cross sign
+  closeButton.style.position = 'absolute';
+  closeButton.style.top = '20px';
+  closeButton.style.right = '20px';
+  closeButton.style.background = 'transparent';
+  closeButton.style.border = 'none';
+  closeButton.style.color = 'white';
+  closeButton.style.fontSize = '40px';
+  closeButton.style.cursor = 'pointer';
+  
+  closeButton.addEventListener('click', () => {
+    modal.remove();
+  });
+
+  // Image inside Modal
+  const img = document.createElement('img');
+  img.src = imageUrl;
+  img.style.maxWidth = '90%';
+  img.style.maxHeight = '80%';
+  img.style.border = '2px solid white';
+  img.style.borderRadius = '8px';
+  img.style.boxShadow = '0 0 20px white';
+
+  modal.appendChild(closeButton);
+  modal.appendChild(img);
+
+  // Agar background pe click kare tab bhi modal close ho
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) {
+      modal.remove();
+    }
+  });
+
+  document.body.appendChild(modal);
+}
 </script>
 </body>
 </html>
