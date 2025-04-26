@@ -452,7 +452,16 @@ async function loadOrders() {
 
     try {
         let results = await query.find();
-
+      
+       if (results.length === 0) {
+  document.getElementById("cartContainer").innerHTML = `
+    <div style="display:flex; justify-content:center; align-items:center; flex-direction:column; height:70vh;">
+      <img src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png" width="150" style="opacity:0.5;">
+      <h2 style="color:gray; margin-top:20px;">No Orders Found</h2>
+    </div>
+  `;
+  return;
+}
         results = results.map(order => {
             let imageHTML = "";
 
