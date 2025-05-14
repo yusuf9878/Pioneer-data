@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pioneer Furniture | Order History</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    :root {
+      --primary: #6d4c41;
+      --primary-dark: #4e342e;
+      --primary-light: #8d6e63;
+      --secondary: #d7ccc8;
+      --accent: #ffab91;
+      --text: #3e2723;
+      --light: #efebe9;
+      --white: #fff;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--light);
+      color: var(--text);
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color: var(--white);
+      padding: 1.5rem 2rem;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .stats {
+      margin-top: 0.5rem;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    .order-card {
+      background: var(--white);
+      padding: 1.2rem;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      margin-bottom: 1.5rem;
+    }
+
+    .order-card p {
+      margin: 0.4rem 0;
+    }
+
+    .image-upload-section {
+      margin-top: 1rem;
+    }
+
+    .image-preview {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 8px;
+      margin-top: 1rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .upload-Btn {
+      margin-top: 0.5rem;
+      padding: 0.5rem 1.2rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .upload-Btn:hover {
+      background: var(--primary-light);
+    }
+
+    input[type="file"] {
+      margin-top: 0.5rem;
+    }
+
+    footer {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color: var(--white);
+      text-align: center;
+      padding: 1rem;
+      margin-top: 3rem;
+      font-size: 0.85rem;
+      width:100%;
+      position: fixed;
+      bottom:0;
+    }
+    
+    .loader {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    border: 3px solid var(--light);
+    border-top: 3px solid var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 10px;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>Order History</h1>
+    <div class="stats">
+      Total Sheets: <strong id="totalSheets">0</strong>
+    </div>
+  </header>
+
+  <div class="container" id="ordersContainer">
+    <!-- Orders will be shown here -->
+  </div>
+
+  <footer>
+    <div>Pioneer Furniture | Created by Yusuf Khan</div>
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+    import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDHUdTcM7oHWcThvxBzoVCTmkY6N6ogHCI",
+      authDomain: "pioneer-database.firebaseapp.com",
+      databaseURL: "https://pioneer-database-default-rtdb.firebaseio.com",
+      projectId: "pioneer-database",
+      storageBucket: "pioneer-database.firebasestorage.app",
+      messagingSenderId: "1095575708432",
+      appId: "1:1095575708432:web:b66d84298bae6a0595fb95",
+      measurementId: "G-8R0QEHG2R8"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const storage = getStorage(app);
+    const container = document.getElementById('ordersContainer');
+    const totalSheetsElement = document.getElementById('totalSheets');
+
+    const ordersRef = ref(db, 'orders');
+    onValue(ordersRef, (snapshot) => {
+      container.innerHTML = '';
+      let totalSheets = 0;
+
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        Object.keys(data).reverse().forEach(key => {
+          const order = data[key];
+
+          if (order.status === "Sofa Ready") {
+            totalSheets += parseInt(order.sheet) || 0;
+
+            const readyDate = order.readyDate ? new Date(order.readyDate).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            }) : 'Not specified';
+
+            const card = document.createElement('div');
+            card.className = 'order-card';
+
+            card.innerHTML = `
+              <p><strong>Bill Number:</strong> ${order.billNumber || 'N/A'}</p>
+              <p><strong>Ready Date:</strong> ${readyDate}</p>
+              <p><strong>Total Sheet:</strong> ${order.sheet || 'N/A'}</p>
+              <div class="image-upload-section">
+                ${order.uploadedImageUrl ? `<img src="${order.uploadedImageUrl}" class="image-preview">` : `
+                  <input type="file" accept="image/*" class="imgInput" />
+                  <button class="upload-Btn">Upload Image</button>
+                `}
+              </div>
+            `;
+
+            if (!order.uploadedImageUrl) {
+              const fileInput = card.querySelector('.imgInput');
+              const uploadBtn = card.querySelector('.upload-Btn');
+
+              uploadBtn.addEventListener('click', () => {
+  const file = fileInput.files[0];
+  if (!file) return alert("Please select an image.");
+
+  // Create loader
+  const loader = document.createElement('div');
+  loader.className = 'loader';
+  uploadBtn.parentElement.appendChild(loader);
+
+  uploadBtn.textContent = "Uploading...";
+  uploadBtn.disabled = true;
+
+  const path = `order_images/${Date.now()}_${file.name}`;
+  const imgRef = storageRef(storage, path);
+
+  uploadBytes(imgRef, file)
+    .then(() => getDownloadURL(imgRef))
+    .then((url) => {
+      return update(ref(db, 'orders/' + key), {
+        uploadedImageUrl: url
+      });
+    })
+    .then(() => {
+      const img = document.createElement('img');
+      img.src = URL.createObjectURL(file);
+      img.className = 'image-preview';
+
+      const section = card.querySelector('.image-upload-section');
+      section.innerHTML = '';
+      section.appendChild(img);
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Upload failed");
+    })
+    .finally(() => {
+      loader.remove();
+      uploadBtn.disabled = false;
+      uploadBtn.textContent = "Upload Image";
+    });
+});
+            }    
+
+            container.appendChild(card);
+          }
+        });
+
+        totalSheetsElement.textContent = totalSheets;
+      } else {
+        container.innerHTML = "<p>No Sofa Ready orders found.</p>";
+      }
+    });
+    
+    
+  </script>
+  <script>
+  // Jab page load ho, ek dummy state push karo
+  history.pushState(null, null, location.href);
+
+  window.onpopstate = function () {
+    // Jab user "back" dabaye, 
+    window.location.href = "index.html";
+  };
+</script>
+</body>
+</html>
