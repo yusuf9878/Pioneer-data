@@ -189,11 +189,20 @@
             margin-bottom: 1.5rem;
         }
 
+
         .detail-item strong {
-            color: var(--primary-dark);
+            color: red;
+            display: block;
+            margin-bottom: 0.3rem;
+            font-size: 1rem;
+            text-align:left;
+        }
+        .detail-item {
+            color: blue;
             display: block;
             margin-bottom: 0.3rem;
             font-size: 0.9rem;
+            text-align:left;
         }
 
         .urgent-tag {
@@ -206,6 +215,7 @@
             font-size: 0.85rem;
             margin-left: 0.5rem;
             animation: pulse 2s infinite;
+            
         }
 
         @keyframes pulse {
@@ -219,14 +229,18 @@
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 1rem;
             margin-top: 1.5rem;
+            object-fit:cover;
+            width:100%;
         }
 
         .order-image {
             border-radius: 8px;
             overflow: hidden;
-            height: 150px;
+            height:100%;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
             transition: var(--transition);
+            object-fit:cover;
+            width:100%;
         }
 
         .order-image:hover {
@@ -571,19 +585,19 @@
                         </div>
                         <div class="order-details">
                             <div class="detail-item">
-                                <strong>Details</strong>
+                                <strong>Details:-</strong>
                                 <div>${order.details || 'No details provided'}</div>
                             </div>
                             <div class="detail-item">
-                                <strong>Sheets</strong>
+                                <strong>Sheets:-</strong>
                                 <div>${order.sheet || 'N/A'}</div>
                             </div>
                             <div class="detail-item">
-                                <strong>Due Date</strong>
+                                <strong>Due Date:-</strong>
                                 <div>${dueDate}</div>
                             </div>
                             <div class="detail-item">
-                                <strong>Urgent</strong>
+                                <strong>Urgent:-</strong>
                                 <div>
                                     ${order.urgent ? '<span class="urgent-tag">Urgent</span>' : 'Normal'}
                                 </div>
