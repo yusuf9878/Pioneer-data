@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pioneer Furniture | Order Submission</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    :root {
+      --primary: #6d4c41;
+      --primary-dark: #4e342e;
+      --primary-light: #8d6e63;
+      --secondary: #d7ccc8;
+      --accent: #ffab91;
+      --text: #3e2723;
+      --light: #efebe9;
+      --white: #fff;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --transition: all 0.3s ease;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html, body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--light);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color: var(--white);
+      padding: 1.5rem 2rem;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    .header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="%236d4c41" width="50" height="50" x="50"></rect><rect fill="%234e342e" width="50" height="50" y="50"></rect></svg>');
+      opacity: 0.1;
+      z-index: -1;
+    }
+    
+    .header h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.2rem;
+      letter-spacing: 1px;
+      text-align: center;
+      position: relative;
+    }
+    
+    .header h1::after {
+      content: "";
+      display: block;
+      width: 80px;
+      height: 3px;
+      background: var(--accent);
+      margin: 0.8rem auto 0;
+    }
+    
+    .container {
+      max-width: 700px;
+      margin: 3rem auto;
+      padding: 0 1.5rem;
+    }
+    
+    .card {
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 8px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--primary), var(--accent));
+    }
+    
+    .card h2 {
+      font-family: 'Playfair Display', serif;
+      color: var(--primary-dark);
+      margin-bottom: 1.8rem;
+      font-weight: 600;
+      font-size: 1.8rem;
+      position: relative;
+      padding-bottom: 0.8rem;
+    }
+    
+    .card h2::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: var(--accent);
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 0.6rem;
+      color: var(--primary-dark);
+      font-size: 0.95rem;
+    }
+    
+    input, textarea, select {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--secondary);
+      border-radius: 6px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.95rem;
+      transition: var(--transition);
+      background-color: var(--light);
+    }
+    
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(109, 76, 65, 0.1);
+    }
+    
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .checkbox-group input {
+      width: auto;
+      margin-right: 0.8rem;
+    }
+    
+    .file-input-wrapper {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    
+    .file-input-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.2rem;
+      background-color: var(--light);
+      border: 2px dashed var(--primary-light);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .file-input-label:hover {
+      background-color: var(--secondary);
+    }
+    
+    .file-input-label i {
+      margin-right: 0.8rem;
+      color: var(--primary);
+      font-size: 1.2rem;
+    }
+    
+    .file-input {
+      position: absolute;
+      width: 0.1px;
+      height: 0.1px;
+      opacity: 0;
+      overflow: hidden;
+      z-index: -1;
+    }
+    
+    .preview-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .preview-item {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .preview-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .preview-item .remove-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    
+    .submit-btn {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: var(--white);
+      border: none;
+      border-radius: 6px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    
+    .submit-btn:hover {
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(109, 76, 65, 0.2);
+    }
+    
+    .submit-btn i {
+      margin-left: 0.5rem;
+    }
+    
+    footer {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color: var(--white);
+      text-align: center;
+      padding: 0.5rem;
+      margin-top: 1rem;
+      font-size: 0.85rem;
+    }
+    
+    footer p {
+      opacity: 0.8;
+    }
+    
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+    
+    .loader {
+      border: 4px solid var(--light);
+      border-top: 4px solid var(--primary);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 1.8rem;
+      }
+      
+      .card {
+        padding: 1.8rem 1.5rem;
+      }
+      
+      .card h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>Pioneer Furniture</h1>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h2>Order Submission</h2>
+      <form id="orderForm">
+        <div class="form-group">
+          <label for="billn">Bill Number</label>
+          <input type="text" id="billn" name="billn" placeholder="Enter bill number" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="details">Order Details</label>
+          <textarea id="details" name="details" placeholder="Enter size, materials, special requests..." required></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="sheat">Total Sheets</label>
+          <input type="number" id="sheat" name="sheat" placeholder="Enter number of sheets" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="duedate">Due Date</label>
+          <input type="date" id="duedate" name="duedate" required>
+        </div>
+        
+        <div class="checkbox-group">
+          <input type="checkbox" id="urgent" name="urgent">
+          <label for="urgent">Mark as Urgent</label>
+        </div>
+        
+        <div class="form-group">
+          <label>Upload Images</label>
+          <div class="file-input-wrapper">
+            <label for="image" class="file-input-label">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <span>Choose files or drag & drop</span>
+            </label>
+            <input type="file" id="image" class="file-input" multiple accept="image/*">
+          </div>
+          <div class="preview-container" id="preview"></div>
+        </div>
+        
+        <button type="submit" class="submit-btn">
+          Submit Order <i class="fas fa-paper-plane"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+   
+    <p>Created By Yusuf Khan</p>       
+    <p>© 2025-2026 All Rights Reserved</p>
+  </footer>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+
+  <script>
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDHUdTcM7oHWcThvxBzoVCTmkY6N6ogHCI",
+      authDomain: "pioneer-database.firebaseapp.com",
+      databaseURL: "https://pioneer-database-default-rtdb.firebaseio.com",
+      projectId: "pioneer-database",
+      storageBucket: "pioneer-database.firebasestorage.app",
+      messagingSenderId: "1095575708432",
+      appId: "1:1095575708432:web:b66d84298bae6a0595fb95",
+      measurementId: "G-8R0QEHG2R8"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const database = firebase.database();
+    const storage = firebase.storage();
+
+    // Function to check if login timestamp is still valid (within 24 hours)
+    function isLoginValid() {
+      const lastLogin = localStorage.getItem('lastLogin');
+      if (!lastLogin) return false;
+      const now = new Date().getTime();
+      return now - parseInt(lastLogin) < 24 * 60 * 60 * 1000; // 24 hours in ms
+    }
+
+    // Prompt for login only if 24 hours have passed or no login
+    window.onload = function() {
+      // Set default date to today
+      document.getElementById('duedate').valueAsDate = new Date();
+      
+      if (isLoginValid()) {
+        return;
+      }
+
+      Swal.fire({
+        title: 'Welcome to Pioneer Furniture',
+        html: `
+          <div style="text-align: left; margin-bottom: 1rem;">
+            <p style="margin-bottom: 1rem;">Please login to submit your furniture orders.</p>
+            <input type="email" id="swal-email" class="swal2-input" placeholder="Email" value="akg14320@gmail.com">
+            <input type="password" id="swal-password" class="swal2-input" placeholder="Password">
+          </div>
+        `,
+        confirmButtonText: 'Login',
+        confirmButtonColor: '#6d4c41',
+        showCancelButton: false,
+        focusConfirm: false,
+        preConfirm: () => {
+          const email = Swal.getPopup().querySelector('#swal-email').value;
+          const password = Swal.getPopup().querySelector('#swal-password').value;
+          if (!email || !password) {
+            Swal.showValidationMessage('Please enter both email and password');
+          }
+          return { email, password };
+        },
+        allowOutsideClick: false
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const { email, password } = result.value;
+          auth.signInWithEmailAndPassword(email, password)
+            .then(() => {
+              localStorage.setItem('lastLogin', new Date().getTime().toString());
+              Swal.fire({
+                title: 'Welcome Back!',
+                text: 'You are now logged in.',
+                icon: 'success',
+                confirmButtonColor: '#6d4c41'
+              });
+            })
+            .catch((error) => {
+              Swal.fire({
+                title: 'Login Failed',
+                text: error.message,
+                icon: 'error',
+                confirmButtonColor: '#6d4c41'
+              }).then(() => location.reload());
+            });
+        }
+      });
+    };
+
+    // Form submission
+    document.getElementById("orderForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const submitBtn = document.querySelector('.submit-btn');
+      submitBtn.innerHTML = '<div class="loader"></div>';
+      submitBtn.disabled = true;
+
+      const billn = document.getElementById("billn").value;
+      const details = document.getElementById("details").value;
+      const sheat = document.getElementById("sheat").value;
+      const duedate = document.getElementById("duedate").value;
+      const urgent = document.getElementById("urgent").checked;
+      const imageFiles = document.getElementById("image").files;
+
+      if (imageFiles.length === 0) {
+        Swal.fire({
+          title: 'Images Required',
+          text: 'Please upload at least one image of your furniture design.',
+          icon: 'error',
+          confirmButtonColor: '#6d4c41'
+        });
+        submitBtn.innerHTML = 'Submit Order <i class="fas fa-paper-plane"></i>';
+        submitBtn.disabled = false;
+        return;
+      }
+
+      const imageURLs = [];
+      const uploadPromises = Array.from(imageFiles).map((imageFile) => {
+        const imageRef = storage.ref('order_images/' + Date.now() + '_' + imageFile.name);
+        return imageRef.put(imageFile).then(snapshot => snapshot.ref.getDownloadURL());
+      });
+
+      Promise.all(uploadPromises)
+        .then((urls) => {
+          imageURLs.push(...urls);
+          const newOrderRef = database.ref('orders').push();
+          return newOrderRef.set({
+            billNumber: billn,
+            details: details,
+            sheet: sheat,
+            dueDate: duedate,
+            urgent: urgent,
+            imageURLs: imageURLs,
+            timestamp: new Date().toISOString(),
+            status: 'pending'
+          });
+        })
+        .then(() => {
+          Swal.fire({
+            title: 'Order Submitted!',
+            html: `
+              <p>Your furniture order has been successfully submitted.</p>
+              <div style="margin-top: 1rem; background: #f5f5f5; padding: 1rem; border-radius: 6px;">
+                <p style="margin-bottom: 0.5rem;"><strong>Bill #:</strong> ${billn}</p>
+                <p><strong>Due Date:</strong> ${new Date(duedate).toLocaleDateString()}</p>
+              </div>
+            `,
+            icon: 'success',
+            confirmButtonColor: '#6d4c41'
+          });
+          document.getElementById("orderForm").reset();
+          document.getElementById("preview").innerHTML = '';
+          document.getElementById("duedate").valueAsDate = new Date();
+        })
+        .catch((err) => {
+          Swal.fire({
+            title: 'Submission Error',
+            text: err.message,
+            icon: 'error',
+            confirmButtonColor: '#6d4c41'
+          });
+        })
+        .finally(() => {
+          submitBtn.innerHTML = 'Submit Order <i class="fas fa-paper-plane"></i>';
+          submitBtn.disabled = false;
+        });
+    });
+
+    // Image preview functionality
+    const imageInput = document.getElementById('image');
+    const previewContainer = document.getElementById('preview');
+
+    imageInput.addEventListener('change', function() {
+      previewContainer.innerHTML = '';
+      
+      if (this.files && this.files.length > 0) {
+        Array.from(this.files).forEach((file, index) => {
+          const reader = new FileReader();
+          
+          reader.onload = function(e) {
+            const previewItem = document.createElement('div');
+            previewItem.className = 'preview-item';
+            
+            previewItem.innerHTML = `
+              <img src="${e.target.result}" alt="Preview ${index + 1}">
+              <button class="remove-btn" data-index="${index}">&times;</button>
+            `;
+            
+            previewContainer.appendChild(previewItem);
+            
+            // Add event listener to remove button
+            previewItem.querySelector('.remove-btn').addEventListener('click', function() {
+              removeImage(index);
+            });
+          };
+          
+          reader.readAsDataURL(file);
+        });
+      }
+    });
+
+    // Function to remove an image from preview and file list
+    function removeImage(index) {
+      const files = Array.from(imageInput.files);
+      files.splice(index, 1);
+      
+      // Create new DataTransfer to update files
+      const dataTransfer = new DataTransfer();
+      files.forEach(file => dataTransfer.items.add(file));
+      imageInput.files = dataTransfer.files;
+      
+      // Trigger change event to update preview
+      const event = new Event('change');
+      imageInput.dispatchEvent(event);
+    }
+
+    // Drag and drop functionality
+    const fileInputLabel = document.querySelector('.file-input-label');
+    
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      fileInputLabel.addEventListener(eventName, preventDefaults, false);
+    });
+    
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
+    ['dragenter', 'dragover'].forEach(eventName => {
+      fileInputLabel.addEventListener(eventName, highlight, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+      fileInputLabel.addEventListener(eventName, unhighlight, false);
+    });
+    
+    function highlight() {
+      fileInputLabel.style.backgroundColor = 'var(--secondary)';
+      fileInputLabel.style.borderColor = 'var(--primary)';
+    }
+    
+    function unhighlight() {
+      fileInputLabel.style.backgroundColor = 'var(--light)';
+      fileInputLabel.style.borderColor = 'var(--primary-light)';
+    }
+    
+    fileInputLabel.addEventListener('drop', handleDrop, false);
+    
+    function handleDrop(e) {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      imageInput.files = files;
+      
+      // Trigger change event
+      const event = new Event('change');
+      imageInput.dispatchEvent(event);
+    }
+  </script>
+  <script>
+  // Jab page load ho, ek dummy state push karo
+  history.pushState(null, null, location.href);
+
+  window.onpopstate = function () {
+    // Jab user "back" dabaye, index.html par redirect karo
+    window.location.href = "index.html";
+  };
+</script>
+</body>
+</html>
