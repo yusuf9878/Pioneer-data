@@ -33,7 +33,7 @@
         }
 
         body {
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Kanit', sans-serif;
             background-color: var(--light);
             color: var(--text);
             min-height: 100vh;
@@ -395,6 +395,21 @@
                 justify-content: center;
             }
         }
+        
+        /* Skeleton Loader */
+.skeleton-card {
+  background: linear-gradient(-90deg, #e0e0e0 0%, #f8f8f8 50%, #e0e0e0 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  height: 160px;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
     </style>
 </head>
 <body>
@@ -437,6 +452,15 @@
     <!-------- Orders Container ------->
     <div class="container">
         <h2 class="page-title">Your Orders</h2>
+        
+        <!-- Skeleton Loader -->
+  <div id="orderLoader">
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+  </div>
+  
         <div id="ordersContainer">
             <!-- Orders will be inserted here by JavaScript -->
         </div>
@@ -553,6 +577,10 @@
 
         /* ========= Order Management =========== */
         database.ref('orders').on('value', (snapshot) => {
+        // Show loader
+document.getElementById('orderLoader').style.display = 'block';
+container.style.display = 'none';
+
             container.innerHTML = '';
             if (snapshot.exists()) {
                 const data = snapshot.val();
@@ -562,6 +590,10 @@
 
                     const orderCard = document.createElement('div');
                     orderCard.className = 'order-card';
+  // Hide loader and show data
+document.getElementById('orderLoader').style.display = 'none';
+container.style.display = 'block';
+
 
                     // Determine status class
                     let statusClass = 'status-pending';
